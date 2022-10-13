@@ -47,7 +47,7 @@ class ContextMenu extends React.Component {
     super(props)
 
     this.addBlock = props.actions
-    console.log(props.actions)
+
 
     this.state ={
       showMenu: false,
@@ -57,18 +57,25 @@ class ContextMenu extends React.Component {
   }
 
   componentDidMount() {
+    
     document.addEventListener("click", this.handleClick)
     document.addEventListener("contextmenu", this.handleContextMenu)
   }
 
   handleContextMenu = (event) => {
     event.preventDefault() // cancel the default context menu
-    // console.log("right click")
-    this.setState({
-      xPos: `${event.pageX}px`,
-      yPos: `${event.pageY}px`,
-      showMenu: true,
-    });
+    if (this.props.canvas.current.contains(event.target)) {
+      this.setState({
+        xPos: `${event.pageX}px`,
+        yPos: `${event.pageY}px`,
+        showMenu: true,
+      });
+    } else {
+      this.setState({
+        showMenu: false,
+      })
+    }
+
   }
 
   handleClick = (event) => {
@@ -77,23 +84,6 @@ class ContextMenu extends React.Component {
       showMenu: false,
     });
   }
-
-  // addBlock() {
-
-  //   var rect = new shapes.standard.Rectangle();
-  //   rect.position(100, 30);
-  //   rect.resize(100, 40);
-  //   rect.attr({
-  //       body: {
-  //           fill: 'blue'
-  //       },
-  //       label: {
-  //           text: 'Hello',
-  //           fill: 'white'
-  //       }
-  //   });
-  //   rect.addTo(this.canvas);
-  // }
 
   render() {
     const { showMenu, xPos, yPos } = this.state;
@@ -105,7 +95,7 @@ class ContextMenu extends React.Component {
           top: yPos,
           left: xPos,
         }}>
-            <button type= "button" class="btn btn-light" onClick={(e) => {e.preventDefault();this.addBlock();}} >New Block</button>
+            <button type= "button" class="btn btn-light" onClick={this.addBlock} >New Block</button>
             <button type= "button" class="btn btn-light">Option2</button>
             <button type= "button" class="btn btn-light">Option3</button>
         </div>
@@ -121,6 +111,7 @@ class Canvas extends React.Component {
     super(props)
 
     this.addBlock = this.addBlock.bind(this);
+    this.canvas = React.createRef();
   }
 
   componentDidMount() {
@@ -179,7 +170,8 @@ class Canvas extends React.Component {
     link.addTo(graph);
   }
 
-  addBlock() {
+  addBlock(event) {
+    event.preventDefault()
 
     var rect = new shapes.standard.Rectangle();
     rect.position(150, 80);
@@ -194,18 +186,15 @@ class Canvas extends React.Component {
         }
     });
     rect.addTo(this.graph);
-    console.log("hi")
   }
-
-
 
   render() {
     // console.log(this.state)
 
     return (
 
-      <div id="canvas">
-        <ContextMenu actions={this.addBlock}></ContextMenu>
+      <div id="canvas" ref={this.canvas} onContextMenu={this.test}>
+        <ContextMenu actions={this.addBlock} canvas={this.canvas}></ContextMenu>
       </div>
     )
   }
