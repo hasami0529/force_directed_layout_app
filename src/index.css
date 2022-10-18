@@ -12,9 +12,14 @@ code {
     monospace;
 }
 
-.lib {
-  height: 56em;
-  padding: 10px;
+.frame {
+  height: 100vh;
+  padding: 0px;
+}
+
+.subframe {
+  height: 94vh;
+  padding: 0px;
 }
 
 .context-menu { 
