@@ -71,7 +71,7 @@ export function Canvas({ canvasAction, setShowMenu }) {
         
             var _paper = new dia.Paper({
                 el: document.getElementById("canvas"),
-                model: graph,
+                model: _graph,
                 width: "100%",
                 height: "100%",
                 gridSize: 1,
@@ -87,20 +87,10 @@ export function Canvas({ canvasAction, setShowMenu }) {
         },[]
     )
 
-    // useEffect(
-    //     () => {
-    //         console.log(graph)
-    //         // demo(graph)
-    //         // console.log(paper)
-
-    //     },
-    // )
-
     useEffect(
         () => {
             console.log(canvasAction)
             if (canvasAction.action === 'addBlock') {
-                console.log(graph)
                 addBlock(graph)
                 canvasAction.action = 'done'
             }
