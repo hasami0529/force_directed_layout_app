@@ -19,9 +19,9 @@ code {
 
 .subframe {
   height: 94vh;
-  padding: 0px;
+  padding: 10px;
 }
 
 .context-menu { 
-  position: absolute; 
+  position: absolute;
 }

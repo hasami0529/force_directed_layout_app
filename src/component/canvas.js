@@ -1,6 +1,8 @@
 import {dia, shapes, highlighters } from 'jointjs';
 import { useEffect, useState } from 'react'
-
+import { selectContextMenu } from '../store/slice/contextmenu'
+import { useDispatch } from 'react-redux'
+import { contextMenuActions } from '../store/slice/contextmenu'
 
 function demo(graph) {
 
@@ -30,10 +32,13 @@ function demo(graph) {
 
 }
 
-function initPaperEvent(paper, setShowMenu) {
+function initPaperEvent(paper, dispatch) {
 
     paper.on('blank:contextmenu', (evt, x, y) => {
-        setShowMenu({ show: true, event: evt})
+        // console.log('rightclick')
+        dispatch(
+            contextMenuActions.showMenu({ event: evt })
+        )
     })
 
     paper.on('element:pointerclick', (elementView) => {
@@ -45,6 +50,12 @@ function initPaperEvent(paper, setShowMenu) {
             }
         });
     });
+
+    document.addEventListener('click', (event) => {
+        dispatch(
+            contextMenuActions.disable({event})
+        )
+    })
 
 }
 
@@ -69,6 +80,8 @@ function addBlock(graph) {
 
 export function Canvas({ canvasAction, setShowMenu }) {
 
+    const dispatch = useDispatch()
+
     const [ graph, setGraph ] = useState(null)
     const [ paper, setPaper ] = useState(null)
 
@@ -89,7 +102,7 @@ export function Canvas({ canvasAction, setShowMenu }) {
         
             });
 
-            initPaperEvent(_paper, setShowMenu)
+            initPaperEvent(_paper, dispatch)
             demo(_graph)
 
             setGraph(_graph)
