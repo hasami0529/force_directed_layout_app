@@ -1,4 +1,4 @@
-import {dia, shapes, } from 'jointjs';
+import {dia, shapes, highlighters } from 'jointjs';
 import { useEffect, useState } from 'react'
 
 
@@ -35,6 +35,16 @@ function initPaperEvent(paper, setShowMenu) {
     paper.on('blank:contextmenu', (evt, x, y) => {
         setShowMenu({ show: true, event: evt})
     })
+
+    paper.on('element:pointerclick', (elementView) => {
+        highlighters.mask.add(elementView, { selector: 'root' }, 'my-element-highlight', {
+            deep: true,
+            attrs: {
+                'stroke': '#FF4365',
+                'stroke-width': 3
+            }
+        });
+    });
 
 }
 
