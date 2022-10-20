@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const contextMenuSlice = createSlice({
   name: "contextmenu",
   initialState: {
-	show: true,
+	show: false,
 	event: {pageX: 100, pageY: 100},
   },
   reducers: {
@@ -10,8 +10,6 @@ export const contextMenuSlice = createSlice({
 		state.event = action.payload.event
 		if (state.show) state.show = false
 		else state.show = true
-
-		// console.log(state.show)
 	},
 	disable: (state, action) => {
 		state.event = action.payload.event
