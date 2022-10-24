@@ -1,21 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { addBlock, init, demo, initPaperEvents } from '../../diagramlib'
 export const canvasSlice = createSlice({
   name: "canvas",
   initialState: {
-	show: true,
-	event: {pageX: 100, pageY: 100},
+	  paper: null,
+	  graph: null,
+	  init: false
   },
   reducers: {
-	toggle: (state, action) => {
-		state.event = action.payload.event
-		if (state.show) state.show = false
-		else state.show = true
+	initPaper: (state, action) => {
+		const { graph, paper } = init()
+		if (!state.init) {
+			state.graph = graph
+			state.paper = paper
+			state.init = true
+		}
 
-		// console.log(state.show)
+		initPaperEvents(state.paper)
+
 	},
+	addBlock: (state, action) => {
+		addBlock(state.graph)
+	},
+	demo: (state, action) => {
+		demo(state.graph)
+	}
   },
 });
 
-export const selectCanvas = (state) => state.canvas; // todo is respond to "name" in the slice
-export const CanvasActions = canvasSlice.actions;
+export const selectCanvas = (state) => state.canvas; // It is respond to "name" in the slice
+export const canvasActions = canvasSlice.actions;
 export default canvasSlice.reducer;
