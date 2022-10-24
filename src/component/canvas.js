@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { selectContextMenu } from '../store/slice/contextmenu'
 import { useDispatch } from 'react-redux'
 import { contextMenuActions } from '../store/slice/contextmenu'
+import { taglibActions } from '../store/slice/taglib';
 
 function demo(graph) {
 
@@ -49,6 +50,11 @@ function initPaperEvent(paper, dispatch) {
                 'stroke-width': 3
             }
         });
+
+        dispatch(
+            taglibActions.showTag({elementId: elementView.id})
+        )
+
     });
 
     document.addEventListener('click', (event) => {
