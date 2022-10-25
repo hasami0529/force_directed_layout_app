@@ -1,1 +1,1 @@
-export { addBlock, demo, init, initPaperEvents } from './init' 
+export { addBlock, demo, init } from './init' 

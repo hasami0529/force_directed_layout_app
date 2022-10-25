@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addBlock, init, demo, initPaperEvents } from '../../diagramlib'
+import { addBlock, init, demo } from '../../diagramlib'
 export const canvasSlice = createSlice({
   name: "canvas",
   initialState: {
@@ -15,9 +15,6 @@ export const canvasSlice = createSlice({
 			state.paper = paper
 			state.init = true
 		}
-
-		initPaperEvents(state.paper)
-
 	},
 	addBlock: (state, action) => {
 		addBlock(state.graph)
