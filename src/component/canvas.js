@@ -1,42 +1,16 @@
 import {dia, shapes, highlighters } from 'jointjs';
-import { useEffect, useState } from 'react'
-import { selectContextMenu } from '../store/slice/contextmenu'
-import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { contextMenuActions } from '../store/slice/contextmenu'
 import { taglibActions } from '../store/slice/taglib';
+<<<<<<< HEAD
+=======
+import { canvasActions, selectCanvas } from '../store/slice/canvas';
+>>>>>>> move_canvasActions_to_diagramlib_failed
 
-function demo(graph) {
-
-    var rect = new shapes.standard.Rectangle();
-    rect.position(100, 30);
-    rect.resize(100, 40);
-    rect.attr({
-        body: {
-            fill: 'blue'
-        },
-        label: {
-            text: 'Hello',
-            fill: 'white'
-        }
-    });
-    rect.addTo(graph);
-
-    var rect2 = rect.clone();
-    rect2.translate(300, 0);
-    rect2.attr('label/text', 'World!');
-    rect2.addTo(graph);
-
-    var link = new shapes.standard.Link();
-    link.source(rect);
-    link.target(rect2);
-    link.addTo(graph);
-
-}
-
-function initPaperEvent(paper, dispatch) {
+function initPaperEvents(paper, dispatch) {
 
     paper.on('blank:contextmenu', (evt, x, y) => {
-        // console.log('rightclick')
         dispatch(
             contextMenuActions.showMenu({ event: evt })
         )
@@ -50,81 +24,51 @@ function initPaperEvent(paper, dispatch) {
                 'stroke-width': 3
             }
         });
-
+        
         dispatch(
             taglibActions.showTag({elementId: elementView.id})
         )
 
-    });
-
-    document.addEventListener('click', (event) => {
-        dispatch(
-            contextMenuActions.disable({event})
-        )
+        document.addEventListener('click', (event) => {
+            dispatch(
+                contextMenuActions.disable({event})
+            )
     })
 
 }
 
-function addBlock(graph) {
-
-      var rect = new shapes.standard.Rectangle();
-      rect.position(150, 80);
-      rect.resize(100, 40);
-      rect.attr({
-          body: {
-              fill: 'blue'
-          },
-          label: {
-              text: 'New',
-              fill: 'white'
-          }
-      });
-      rect.addTo(graph);
-}
 
 
-
-export function Canvas({ canvasAction, setShowMenu }) {
+export function Canvas() {
 
     const dispatch = useDispatch()
-
-    const [ graph, setGraph ] = useState(null)
-    const [ paper, setPaper ] = useState(null)
+    const states = useSelector(selectCanvas)
 
     useEffect(
         () => {
             console.log('init')
 
-            var namespace = shapes;
-            var _graph = new dia.Graph({}, { cellNamespace: namespace });
-        
-            var _paper = new dia.Paper({
-                el: document.getElementById("canvas"),
-                model: _graph,
-                width: "100%",
-                height: "100%",
-                gridSize: 1,
-                cellViewNamespace: namespace
-        
-            });
+            dispatch(
+                canvasActions.initPaper()
+            )
 
-            initPaperEvent(_paper, dispatch)
-            demo(_graph)
+            dispatch(
+                canvasActions.demo()
+            )
 
-            setGraph(_graph)
-            setPaper(_paper)
         },[]
     )
 
     useEffect(
         () => {
-            console.log(canvasAction)
-            if (canvasAction.action === 'addBlock') {
-                addBlock(graph)
-                canvasAction.action = 'done'
+            try {
+                initPaperEvents(states.paper, dispatch)
+            } catch (error) {
+                console.warn('Add listeners will fail on the first time. It might be a bug.')
             }
-        },
-        [canvasAction]
+
+
+        }, [states.paper]
     )
 
     return (
