@@ -1,11 +1,15 @@
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { selectContextMenu } from "../store/slice/contextmenu";
+import { canvasActions } from '../store/slice/canvas';
 
-export function ContextMenu({ setCanvasAction, showMenu }) {
-  const states = useSelector(selectContextMenu); // <-- 拿取資料
+export function ContextMenu() {
+  const states = useSelector(selectContextMenu);
+  const dispatch = useDispatch();
 
   function addBlock() {
-    setCanvasAction({action: 'addBlock'})
+    dispatch(
+      canvasActions.addBlock()
+    )
   }
 
   if (states.show) {
