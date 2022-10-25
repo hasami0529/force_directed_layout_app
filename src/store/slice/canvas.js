@@ -9,8 +9,9 @@ export const canvasSlice = createSlice({
   },
   reducers: {
 	initPaper: (state, action) => {
-		const { graph, paper } = init()
+
 		if (!state.init) {
+			const { graph, paper } = init()
 			state.graph = graph
 			state.paper = paper
 			state.init = true
