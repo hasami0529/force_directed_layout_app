@@ -65,8 +65,6 @@ export function Canvas() {
             } catch (error) {
                 console.warn('Add listeners will fail on the first time. It might be a bug.')
             }
-
-
         }, [states.paper]
     )
 
