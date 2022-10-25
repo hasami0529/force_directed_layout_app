@@ -3,10 +3,8 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { contextMenuActions } from '../store/slice/contextmenu'
 import { taglibActions } from '../store/slice/taglib';
-<<<<<<< HEAD
-=======
 import { canvasActions, selectCanvas } from '../store/slice/canvas';
->>>>>>> move_canvasActions_to_diagramlib_failed
+
 
 function initPaperEvents(paper, dispatch) {
 
@@ -28,11 +26,12 @@ function initPaperEvents(paper, dispatch) {
         dispatch(
             taglibActions.showTag({elementId: elementView.id})
         )
+    })
 
-        document.addEventListener('click', (event) => {
-            dispatch(
-                contextMenuActions.disable({event})
-            )
+    document.addEventListener('click', (event) => {
+        dispatch(
+            contextMenuActions.disable({event})
+        )
     })
 
 }
