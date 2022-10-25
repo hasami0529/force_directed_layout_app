@@ -1,8 +1,4 @@
 import {dia, shapes, highlighters } from 'jointjs';
-import { taglibActions } from '../store/slice/taglib';
-import { contextMenuActions } from '../store/slice/contextmenu';
-import { useDispatch } from 'react-redux';
-import store from "../store";
 
 export function init() {
     var namespace = shapes;
@@ -66,36 +62,3 @@ export function addBlock(graph) {
     rect.addTo(graph);
 }
 
-export function initPaperEvents(paper) {
-
-    paper.on('blank:contextmenu', (evt, x, y) => {
-        // console.log('rightclick')
-        store.dispatch(
-            contextMenuActions.showMenu({ event: evt })
-        )
-    })
-
-    paper.on('element:pointerclick', (elementView) => {
-        highlighters.mask.add(elementView, { selector: 'root' }, 'my-element-highlight', {
-            deep: true,
-            attrs: {
-                'stroke': '#FF4365',
-                'stroke-width': 3
-            }
-        });
-
-        // var id = elementView.findAttribute('id')
-        console.log(elementView.id)
-
-        store.dispatch(
-            taglibActions.showTag({ elementId: elementView.id })
-        )
-    });
-
-    document.addEventListener('click', (event) => {
-        store.dispatch(
-            contextMenuActions.disable({event})
-        )
-    })
-
-}

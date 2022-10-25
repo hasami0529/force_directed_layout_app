@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { selectContextMenu } from "../store/slice/contextmenu";
 import { canvasActions } from '../store/slice/canvas';
 
-export function ContextMenu({ setCanvasAction, showMenu }) {
+export function ContextMenu() {
   const states = useSelector(selectContextMenu);
   const dispatch = useDispatch();
 
