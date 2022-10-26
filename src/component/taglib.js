@@ -97,10 +97,11 @@ export function Taglib() {
 
           { graph && graph.getCells().map(
             (el) => {
-              console.log(el)
-              return (
-                <TreeItem label={el.attributes.attrs.label.text} />
-              )
+              if (el.attributes.type.startsWith('standard')){
+                return (
+                  <TreeItem label={el.attributes.attrs.label.text} />
+                )
+              }
             })
           }
           {/* <TreeItem nodeId="1" label="Applications">
