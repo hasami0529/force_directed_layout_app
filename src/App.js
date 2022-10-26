@@ -13,14 +13,14 @@ function App() {
       <div className='frame'>
         <Navbar></Navbar>
         <ContextMenu></ContextMenu>
-        <div className="row row-cols-3 subframe" >
-          <div className="col-2">
+        <div className="row row-cols-3 main" >
+          <div className="col-2 sidecolumn">
             <Taglib></Taglib>
           </div>
-          <div className="col-8 bg-warning">
+          <div className="col-8 sidecolumn">
             <Canvas></Canvas>
           </div>
-          <div className="col-2">
+          <div className="col-2 sidecolumn">
             <Inspect></Inspect>
           </div>
         </div>

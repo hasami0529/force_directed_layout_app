@@ -1,5 +1,5 @@
 export function Inspect(){
     return (
-      <div>inspect</div>
+      <div class="sidecolumn">inspect</div>
     )
   }

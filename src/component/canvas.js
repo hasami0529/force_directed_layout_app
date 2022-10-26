@@ -18,7 +18,7 @@ function initPaperEvents(paper, dispatch) {
         highlighters.mask.add(elementView, { selector: 'root' }, 'my-element-highlight', {
             deep: true,
             attrs: {
-                'stroke': '#FF4365',
+                'stroke': '#F2CC0F',
                 'stroke-width': 3
             }
         });
@@ -27,6 +27,11 @@ function initPaperEvents(paper, dispatch) {
             taglibActions.showTag({elementId: elementView.id})
         )
     })
+
+    // paper.on('cell:unhighlight', (elementView) =>  {
+
+    //     highlighter.remove(elementView, );
+    // });
 
     document.addEventListener('click', (event) => {
         dispatch(
@@ -69,6 +74,6 @@ export function Canvas() {
     )
 
     return (
-        <div id="canvas"></div>
+        <div class="canvas" id="canvas"></div>
     )
 }

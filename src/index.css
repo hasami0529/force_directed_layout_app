@@ -17,10 +17,23 @@ code {
   padding: 0px;
 }
 
-.subframe {
+.main {
   height: 95vh;
   padding: 10px;
 }
+
+.canvas {
+  height: 95vh;
+  padding: 10px;
+  background-color:	 #ceb3e8
+}
+
+.sidecolumn {
+  height: 95vh;
+  padding: 10px;
+  background-color:	#a574d5
+}
+
 
 .context-menu { 
   position: absolute;
