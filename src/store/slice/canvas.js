@@ -21,7 +21,7 @@ export const canvasSlice = createSlice({
 		addBlock(state.graph)
 	},
 	demo: (state, action) => {
-		demo(state.graph)
+		if (state.init) demo(state.graph)
 	}
   },
 });
