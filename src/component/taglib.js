@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectTaglib } from "../store/slice/taglib";
+import { selectCanvas } from "../store/slice/canvas";
 
 // for tabs
 import Tabs from '@mui/material/Tabs';
@@ -47,10 +48,15 @@ export function Taglib() {
   const states = useSelector(selectTaglib); // <-- 拿取資料
   const dispatch = useDispatch();
   const [value, setValue] = React.useState(0)
+  const { graph } = useSelector(selectCanvas)
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  function iterateTree() {
+    console.log(graph.getCells())
+  }
 
   return (
     <Box
@@ -67,36 +73,47 @@ export function Taglib() {
         <Tab icon={<TagIcon />} aria-label="tag" label="Tag" {...a11yProps(0)} />
         <Tab icon={<AccountTreeOutlinedIcon />} aria-label="tree" label="tree" {...a11yProps(1)} />
       </Tabs>
-      <TabPanel value={value} index={0}>
-      <div>
-        {states.tags.map((i) => (
-        <div class='form-check' type="checkbox" value="" >      
-          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></input>
-          <label class="form-check-label" for="flexCheckDefault">
-            {i.content}
-          </label>
-        </div>
-        ))}
-    </div>
 
+      <TabPanel value={value} index={0}>
+        <div>
+          {states.tags.map((i) => (
+            <div class='form-check' type="checkbox" value="" >      
+              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></input>
+              <label class="form-check-label" for="flexCheckDefault">
+                {i.content}
+              </label>
+            </div>
+          ))}
+        </div>
       </TabPanel>
+
       <TabPanel value={value} index={1}>
         <TreeView
-        aria-label="file system navigator"
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-        sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-      >
-        <TreeItem nodeId="1" label="Applications">
-          <TreeItem nodeId="2" label="Calendar" />
-        </TreeItem>
-        <TreeItem nodeId="5" label="Documents">
-          <TreeItem nodeId="10" label="OSS" />
-          <TreeItem nodeId="6" label="MUI">
-            <TreeItem nodeId="8" label="index.js" />
+          aria-label="file system navigator"
+          defaultCollapseIcon={<ExpandMoreIcon />}
+          defaultExpandIcon={<ChevronRightIcon />}
+          sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+        >
+
+          { graph && graph.getCells().map(
+            (el) => {
+              console.log(el)
+              return (
+                <TreeItem label={el.attributes.attrs.label.text} />
+              )
+            })
+          }
+          {/* <TreeItem nodeId="1" label="Applications">
+            <TreeItem nodeId="2" label="Calendar" />
           </TreeItem>
-        </TreeItem>
-      </TreeView>
+
+          <TreeItem nodeId="5" label="Documents">
+            <TreeItem nodeId="10" label="OSS" />
+            <TreeItem nodeId="6" label="MUI">
+              <TreeItem nodeId="8" label="index.js" />
+            </TreeItem>
+          </TreeItem> */}
+        </TreeView>
       </TabPanel>
 
     </Box>
