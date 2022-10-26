@@ -1,4 +1,5 @@
 import {dia, shapes, highlighters } from 'jointjs';
+import rectAttrs from './shapes/rect'
 
 export function init() {
     var namespace = shapes;
@@ -10,8 +11,9 @@ export function init() {
         width: "100%",
         height: "100%",
         gridSize: 1,
-        cellViewNamespace: namespace
-
+        cellViewNamespace: namespace,
+        linkPinning: false,
+        highlighting: false,
     });
 
     return { graph, paper }
@@ -19,18 +21,12 @@ export function init() {
 
 export function demo(graph) {
 
-    var rect = new shapes.standard.Rectangle();
+    var rect = new shapes.standard.Rectangle(rectAttrs);
+    // var rect = new shapes.standard.Rectangle();
+    rect.attr(rectAttrs)
     rect.position(100, 30);
     rect.resize(100, 40);
-    rect.attr({
-        body: {
-            fill: 'blue'
-        },
-        label: {
-            text: 'Hello',
-            fill: 'white'
-        }
-    });
+
     rect.addTo(graph);
 
     var rect2 = rect.clone();
@@ -38,21 +34,17 @@ export function demo(graph) {
     rect2.attr('label/text', 'World!');
     rect2.addTo(graph);
 
-    var link = new shapes.standard.Link();
-    link.source(rect);
-    link.target(rect2);
-    link.addTo(graph);
-
 }
 
 export function addBlock(graph) {
 
-    var rect = new shapes.standard.Rectangle();
+    var rect = new shapes.standard.Rectangle(rectAttrs);
+    rect.attr(rectAttrs)
     rect.position(150, 80);
     rect.resize(100, 40);
     rect.attr({
         body: {
-            fill: 'blue'
+            fill: '#2BF0FB'
         },
         label: {
             text: 'New',
