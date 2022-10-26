@@ -56,9 +56,9 @@ export function Canvas() {
                 canvasActions.initPaper()
             )
 
-            dispatch(
-                canvasActions.demo()
-            )
+            // dispatch(
+            //     canvasActions.demo()
+            // )
 
         },[]
     )

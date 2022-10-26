@@ -14,15 +14,16 @@ export const canvasSlice = createSlice({
 			const { graph, paper } = init()
 			state.graph = graph
 			state.paper = paper
+			demo(state.graph)
 			state.init = true
 		}
 	},
 	addBlock: (state, action) => {
 		addBlock(state.graph)
 	},
-	demo: (state, action) => {
-		if (state.init) demo(state.graph)
-	}
+	// demo: (state, action) => {
+	// 	if (state.init) demo(state.graph)
+	// }
   },
 });
 
