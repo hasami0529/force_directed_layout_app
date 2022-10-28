@@ -1,15 +1,25 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { selectContextMenu } from "../store/slice/contextmenu";
+import { selectCanvas } from '../store/slice/canvas';
 import { canvasActions } from '../store/slice/canvas';
+import { taglibActions } from '../store/slice/taglib';
 
 export function ContextMenu() {
   const states = useSelector(selectContextMenu);
+  const { graph } = useSelector(selectCanvas)
   const dispatch = useDispatch();
 
   function addBlock() {
     dispatch(
       canvasActions.addBlock()
     )
+    if (graph) {
+      console.log(graph.getElements())
+      dispatch(
+        taglibActions.renderElements({ elements: graph.getElements() })
+      )
+    }
+
   }
 
   if (states.show) {
