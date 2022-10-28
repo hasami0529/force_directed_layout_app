@@ -54,8 +54,8 @@ export function Taglib() {
     setValue(newValue);
   };
 
-  function iterateTree() {
-    console.log(graph.getCells())
+  function test() {
+    console.log(states.elements)
   }
 
   return (
@@ -94,15 +94,14 @@ export function Taglib() {
           defaultExpandIcon={<ChevronRightIcon />}
           sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
         >
-
-          { graph && graph.getCells().map(
+          {/* {test()} */}
+          { states.elements.map(
             (el) => {
-              if (el.attributes.type.startsWith('standard')){
                 return (
                   <TreeItem label={el.attributes.attrs.label.text} />
                 )
               }
-            })
+            )
           }
           {/* <TreeItem nodeId="1" label="Applications">
             <TreeItem nodeId="2" label="Calendar" />
