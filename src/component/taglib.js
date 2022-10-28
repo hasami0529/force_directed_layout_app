@@ -94,15 +94,17 @@ export function Taglib() {
           defaultExpandIcon={<ChevronRightIcon />}
           sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
         >
-          {/* {test()} */}
-          { states.elements.map(
-            (el) => {
-                return (
-                  <TreeItem label={el.attributes.attrs.label.text} />
-                )
-              }
-            )
-          }
+          <TreeItem nodeId="1" label="Blocks">
+            { states.elements.map(
+              (el) => {
+                  return (
+                    <TreeItem label={el.attributes.attrs.label.text} />
+                  )
+                }
+              )
+            }
+          </TreeItem>
+
           {/* <TreeItem nodeId="1" label="Applications">
             <TreeItem nodeId="2" label="Calendar" />
           </TreeItem>
