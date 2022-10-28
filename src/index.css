@@ -40,7 +40,7 @@ code {
 }
 
 /* logic.css */
-.connection {
+/* .connection {
   stroke: #999;
 }
 
@@ -53,7 +53,7 @@ code {
   stroke: black;
   stroke-width: 9px;
   transition: all 0s;
-}
+} */
 
 .link-tools .tool-remove circle {
   fill: white;
