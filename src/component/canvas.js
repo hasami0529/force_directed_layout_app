@@ -39,6 +39,14 @@ function initPaperEvents(paper, dispatch) {
         )
     })
 
+    paper.on('element:mouseenter', function(elementView) {
+        elementView.showTools();
+    });
+    
+    paper.on('element:mouseleave', function(elementView) {
+        elementView.hideTools();
+    });
+
 }
 
 

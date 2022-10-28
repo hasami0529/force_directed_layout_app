@@ -1,5 +1,5 @@
-import {dia, shapes, highlighters } from 'jointjs';
-import rectAttrs from './shapes/rect'
+import {dia, shapes, highlighters, elementTools } from 'jointjs';
+import createBlock from './shapes/rect'
 
 export function init() {
     var namespace = shapes;
@@ -16,41 +16,17 @@ export function init() {
         highlighting: false,
     });
 
+
+
     return { graph, paper }
 }
 
-export function demo(graph) {
-
-    var rect = new shapes.standard.Rectangle(rectAttrs);
-    // var rect = new shapes.standard.Rectangle();
-    rect.attr(rectAttrs)
-    rect.position(100, 30);
-    rect.resize(100, 40);
-
-    rect.addTo(graph);
-
-    var rect2 = rect.clone();
-    rect2.translate(300, 0);
-    rect2.attr('label/text', 'World!');
-    rect2.addTo(graph);
-
+export function demo(graph, paper) {
+    if (!graph || !paper) return
+    createBlock(paper, graph)
 }
 
-export function addBlock(graph) {
-
-    var rect = new shapes.standard.Rectangle(rectAttrs);
-    rect.attr(rectAttrs)
-    rect.position(150, 80);
-    rect.resize(100, 40);
-    rect.attr({
-        body: {
-            fill: '#2BF0FB'
-        },
-        label: {
-            text: 'New',
-            fill: 'white'
-        }
-    });
-    rect.addTo(graph);
+export function addBlock(paper, graph) {
+    createBlock(paper, graph)
 }
 
