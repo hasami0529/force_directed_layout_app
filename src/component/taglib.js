@@ -97,6 +97,7 @@ export function Taglib() {
           <TreeItem nodeId="1" label="Blocks">
             { states.elements.map(
               (el) => {
+                if (el.role === 'Block')
                   return (
                     <TreeItem label={el.attributes.attrs.label.text} />
                   )

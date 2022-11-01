@@ -72,6 +72,7 @@ export default function createBlock(paper, graph) {
 
 
     rect.attr(attrs)
+    rect.role = 'Block'
     rect.position(100, 30);
     rect.resize(100, 40);
 

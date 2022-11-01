@@ -1,4 +1,4 @@
-import {dia, shapes, highlighters, elementTools } from 'jointjs';
+import {dia, shapes, highlighters, elementTools, g } from 'jointjs';
 import createBlock from './shapes/rect'
 
 export function init() {
@@ -14,6 +14,7 @@ export function init() {
         cellViewNamespace: namespace,
         linkPinning: false,
         highlighting: false,
+        embeddingMode: true
     });
 
 
@@ -23,7 +24,14 @@ export function init() {
 
 export function demo(graph, paper) {
     if (!graph || !paper) return
-    createBlock(paper, graph)
+
+    const rect1 = createBlock(paper, graph).rect
+
+    const rect2 = createBlock(paper, graph).rect
+
+    rect2.position(100,200)
+
+    console.log(rect1.role)
 }
 
 export function addBlock(paper, graph) {
