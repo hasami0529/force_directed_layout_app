@@ -9,6 +9,7 @@ const attrs = {
         text: 'Hello',
         fill: 'black'
     },
+    // We don't need ports for now
     // ports: {
     //     groups: {
     //         'left': leftPort,
@@ -69,6 +70,7 @@ export default function createBlock(paper, graph) {
         ]
     });
 
+
     rect.attr(attrs)
     rect.position(100, 30);
     rect.resize(100, 40);
@@ -78,6 +80,7 @@ export default function createBlock(paper, graph) {
     var elementView = rect.findView(paper);
     elementView.addTools(toolsView);
     elementView.hideTools()
+    return { rect, elementView }
 }
 
 // export default attrs;
