@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { contextMenuActions } from '../store/slice/contextmenu'
 import { taglibActions } from '../store/slice/taglib';
 import { canvasActions, selectCanvas } from '../store/slice/canvas';
+import { inspectActions } from '../store/slice/inspect'
 
 
 function initPaperEvents(paper, dispatch) {
@@ -22,9 +23,17 @@ function initPaperEvents(paper, dispatch) {
                 'stroke-width': 3
             }
         });
+
+        dispatch(
+            canvasActions.setFocus({ model: elementView.model })
+        )
         
         dispatch(
             taglibActions.showTag({elementId: elementView.id})
+        )
+
+        dispatch(
+            inspectActions.showBlockInfo({ model: elementView.model })
         )
     })
 
@@ -48,7 +57,6 @@ function initPaperEvents(paper, dispatch) {
     });
 
     // for range selection
-
     paper.on({
         'blank:pointerdown': function(evt, x, y) {
             var data = evt.data = {};
