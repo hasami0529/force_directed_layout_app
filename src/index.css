@@ -33,16 +33,34 @@ code {
   padding: 10px;
   background-color:	#a574d5
 }
-
 .inspection {
   height: 95vh;
   padding: 10px;
   background-color: #FFFFFFFF
 }
 
+.row {
+  background-color:	#a574d5
+}
 
 .context-menu { 
   position: absolute;
+}
+
+.navbar {
+  background-color:	#25587c
+}
+
+.nav-link > div {
+  color: #f4f4f4f4
+}
+
+.navbar-brand > div {
+  color: #f4f4f4f4
+}
+
+g > .block {
+  fill: #2BF0FB
 }
 
 /* logic.css */
