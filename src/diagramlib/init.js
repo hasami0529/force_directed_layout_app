@@ -38,3 +38,10 @@ export function addBlock(paper, graph) {
     createBlock(paper, graph)
 }
 
+export function setLabel(model, label) {
+    if (model instanceof dia.Element) {
+        model.attr('label/text', label)
+    } else {
+        console.warning('model is not as expected')
+    }
+}

@@ -34,6 +34,12 @@ code {
   background-color:	#a574d5
 }
 
+.inspection {
+  height: 95vh;
+  padding: 10px;
+  background-color: #FFFFFFFF
+}
+
 
 .context-menu { 
   position: absolute;

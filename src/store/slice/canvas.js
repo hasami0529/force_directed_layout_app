@@ -1,15 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addBlock, init, demo } from '../../diagramlib'
+import { addBlock, init, demo, setLabel } from '../../diagramlib'
+
 export const canvasSlice = createSlice({
   name: "canvas",
   initialState: {
 	  paper: null,
 	  graph: null,
-	  init: false
+	  init: false,
+	  focus: null,
   },
   reducers: {
 	initPaper: (state, action) => {
-
 		if (!state.init) {
 			const { graph, paper } = init()
 			state.graph = graph
@@ -21,6 +22,14 @@ export const canvasSlice = createSlice({
 	addBlock: (state, action) => {
 		addBlock(state.paper, state.graph)
 	},
+	changeLabel: (state, action) => {
+		if (state.focus) {
+			setLabel(state.focus, action.payload.label)
+		}
+	},
+	setFocus: (state, action) => {
+		state.focus = action.payload.model
+	}
   },
 });
 

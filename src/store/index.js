@@ -3,6 +3,7 @@ import rootReducer from "./slice/todo";
 import contextmenuReducer from './slice/contextmenu'
 import taglibReducer from './slice/taglib'
 import canvasReducer from "./slice/canvas";
+import inspectReducer from './slice/inspect'
 
 
 export default configureStore({
@@ -10,7 +11,8 @@ export default configureStore({
     todo: rootReducer,
     contextmenu: contextmenuReducer,
     taglib: taglibReducer,
-    canvas: canvasReducer
+    canvas: canvasReducer,
+    inspect: inspectReducer
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false})
 });
