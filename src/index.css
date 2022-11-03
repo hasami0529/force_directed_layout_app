@@ -59,9 +59,10 @@ code {
   color: #f4f4f4f4
 }
 
-g > .block {
+/* a bug here */
+/* g > .block {
   fill: #2BF0FB
-}
+} */
 
 /* logic.css */
 /* .connection {

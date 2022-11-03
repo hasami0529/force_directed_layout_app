@@ -3,7 +3,7 @@ import {dia, shapes, highlighters, elementTools } from 'jointjs';
 
 const attrs = {
     body: {
-        // fill: '#2BF0FB', // be defined in css
+        fill: '#2BF0FB', // be defined in css
         class: 'block'
     },
     label: {
