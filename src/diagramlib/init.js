@@ -1,5 +1,6 @@
 import {dia, shapes, highlighters, elementTools, g } from 'jointjs';
 import createBlock from './shapes/rect'
+import createNormalLink from './shapes/link'
 
 export function init() {
     var namespace = shapes;
@@ -12,9 +13,16 @@ export function init() {
         height: "100%",
         gridSize: 1,
         cellViewNamespace: namespace,
-        linkPinning: false,
+        // linkPinning: false,
         highlighting: false,
-        embeddingMode: true
+        embeddingMode: true,
+        defaultRouter: {
+            name: "orthogonal",
+            args: {
+                padding: 10,
+            }
+        },
+        defaultLink: createNormalLink
     });
 
 
