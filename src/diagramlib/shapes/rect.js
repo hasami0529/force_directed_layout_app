@@ -1,5 +1,4 @@
-import { topPort, bottomPort, rightPort, leftPort } from "./ports";
-import {dia, shapes, highlighters, elementTools } from 'jointjs';
+import {dia, shapes, elementTools } from 'jointjs';
 
 const attrs = {
     body: {
@@ -49,6 +48,8 @@ const containerAttrs = {
         },
     },
 }
+
+
 export function createContainer(paper, graph) {
     var container = new shapes.standard.Rectangle(containerAttrs)
     container.role = "container"
@@ -64,24 +65,49 @@ export function createContainer(paper, graph) {
     var removeButton = new elementTools.Remove({
         action: (_, elementView) => elementView.remove({ })
     });
-    const connectButton = new elementTools.Connect({
+
+    var collapseButton = new elementTools.Button({
+        focusOpacity: 0.5,
+        // top-right corner
         x: '100%',
         y: '0%',
         offset: { x: -5, y: -5 },
-        magnet: 'body'
+        action: function(evt) {
+            alert('View id: ' + this.id + '\n' + 'Model id: ' + this.model.id);
+        },
+        markup: [
+            {
+                tagName: 'path',
+                selector: 'icon',
+                attributes: {
+                    'd': 'M7.5 0.234C3.486 0.234 0.234 3.486 0.234 7.5s3.252 7.266 7.266 7.266 7.266 -3.252 7.266 -7.266S11.514 0.234 7.5 0.234zM3.633 8.672c-0.193 0 -0.352 -0.158 -0.352 -0.352v-1.641c0 -0.193 0.158 -0.352 0.352 -0.352h7.734c0.193 0 0.352 0.158 0.352 0.352v1.641c0 0.193 -0.158 0.352 -0.352 0.352H3.633z',
+                    'fill': '#0A1EE6',
+                    // "viewBox": "-0.938 0 15 15",
+                }
+            },
+        ]
     });
+
+    // container connection is not supported for now
+    // const connectButton = new elementTools.Connect({
+    //     x: '100%',
+    //     y: '0%',
+    //     offset: { x: -5, y: -5 },
+    //     magnet: 'body'
+    // });
 
     var toolsView = new dia.ToolsView({
         tools: [
             boundaryTool,
             removeButton,
-            connectButton
+            // connectButton,
+            collapseButton,
         ]
     });
 
     var elementView = container.findView(paper);
     elementView.addTools(toolsView);
-    elementView.hideTools()
+    elementView.showTools()
 
     return { container, elementView }
 }
