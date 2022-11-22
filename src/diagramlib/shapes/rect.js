@@ -39,7 +39,54 @@ const attrs = {
     // }
 }
 
-export default function createBlock(paper, graph) {
+
+const containerAttrs = {
+    attrs: {
+        body: {
+            strokeDasharray: "10 5",
+            opacity: "100%",
+            fillOpacity: 0,
+        },
+    },
+}
+export function createContainer(paper, graph) {
+    var container = new shapes.standard.Rectangle(containerAttrs)
+    container.role = "container"
+    container.addTo(paper.model)
+
+    // Tools
+    var boundaryTool = new elementTools.Boundary({
+        padding: 20,
+        rotate: true,
+        useModelGeometry: true,
+    });
+
+    var removeButton = new elementTools.Remove({
+        action: (_, elementView) => elementView.remove({ })
+    });
+    const connectButton = new elementTools.Connect({
+        x: '100%',
+        y: '0%',
+        offset: { x: -5, y: -5 },
+        magnet: 'body'
+    });
+
+    var toolsView = new dia.ToolsView({
+        tools: [
+            boundaryTool,
+            removeButton,
+            connectButton
+        ]
+    });
+
+    var elementView = container.findView(paper);
+    elementView.addTools(toolsView);
+    elementView.hideTools()
+
+    return { container, elementView }
+}
+
+export function createBlock(paper, graph) {
     var rect = new shapes.standard.Rectangle(attrs);
 
     // Tools

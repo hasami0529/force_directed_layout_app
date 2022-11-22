@@ -1,5 +1,5 @@
 import {dia, shapes, highlighters, elementTools, g } from 'jointjs';
-import createBlock from './shapes/rect'
+import { createBlock, createContainer }  from './shapes/rect'
 import createNormalLink from './shapes/link'
 import { inspectActions } from '../store/slice/inspect'
 import { contextMenuActions } from '../store/slice/contextmenu'
@@ -59,48 +59,39 @@ export function initPaperEvents(paper, dispatch) {
     paper.on({
         'blank:pointerdown': function(evt, x, y) {
             var data = evt.data = {};
-            var cell;
 
-
-            cell = new shapes.standard.Rectangle({
-                attrs: {
-                    body: {
-                        strokeDasharray: "10 5",
-                        opacity: "100%",
-                        fillOpacity: 0,
-                    },
-                },
-            })
-            cell.position(x, y);
-            cell.toBack()
+            const { container } = createContainer(paper)
+            container.position(x, y);
+            container.toBack()
             data.x = x;
             data.y = y;
 
-            cell.addTo(this.model);
-            data.cell = cell;
+            container.addTo(this.model);
+            data.container = container;
         },
         'blank:pointermove': function(evt, x, y) {
             var data = evt.data;
-            var cell = data.cell;
+            var container = data.container;
             var bbox = new g.Rect(data.x, data.y, x - data.x, y - data.y);
             bbox.normalize();
-            cell.set({
+            container.set({
                 position: { x: bbox.x, y: bbox.y },
                 size: { width: Math.max(bbox.width, 1), height: Math.max(bbox.height, 1) }
                 });
         },
         'blank:pointerup': function(evt) {
-            var cell = evt.data.cell;
-            const seletedBlocks = this.findViewsInArea(cell.getBBox())
-            console.log(seletedBlocks.length)
+            var container = evt.data.container
+            const containerId = container.id
+            const seletedBlocks = this.findViewsInArea(container.getBBox())
+            // console.log(container.id)
             if (seletedBlocks.length > 1) {
-                seletedBlocks.pop() // remove container itself
-                seletedBlocks.map(e => {
-                    cell.embed(e.model)
-                    cell.fitEmbeds({deep: true, padding: 10})
-                })
+                for (const b of seletedBlocks) {
+                    if (b.model.id === containerId) continue
+                    container.embed(b.model)
+                    container.fitEmbeds({deep: true, padding: 10})
+                }
             } else {
-                cell.remove()
+                container.remove()
             }
         },
     })
