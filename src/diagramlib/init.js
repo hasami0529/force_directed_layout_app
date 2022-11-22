@@ -15,31 +15,31 @@ export function initPaperEvents(paper, dispatch) {
     })
 
     paper.on('element:pointerclick', (elementView) => {
-        highlighters.mask.add(elementView, { selector: 'root' }, 'my-element-highlight', {
-            deep: true,
-            attrs: {
-                'stroke': '#F2CC0F',
-                'stroke-width': 3
-            }
-        });
+        // console.log(highlighters.mask.get(elementView))
+        if (!highlighters.mask.get(elementView).length) {
+            highlighters.mask.add(elementView, { selector: 'root' }, 'my-element-highlight', {
+                deep: true,
+                attrs: {
+                    'stroke': '#F2CC0F',
+                    'stroke-width': 3
+                }
+            });
 
-        dispatch(
-            canvasActions.setFocus({ model: elementView.model })
-        )
-        
-        dispatch(
-            taglibActions.showTag({elementId: elementView.id})
-        )
+            dispatch(
+                canvasActions.setFocus({ model: elementView.model })
+            )
+            dispatch(
+                taglibActions.showTag({elementId: elementView.id})
+            )
+            dispatch(
+                inspectActions.showBlockInfo({ model: elementView.model })
+            )
+            
+        } else {
+            highlighters.mask.remove(elementView);
+        }
 
-        dispatch(
-            inspectActions.showBlockInfo({ model: elementView.model })
-        )
     })
-
-    // paper.on('cell:unhighlight', (elementView) =>  {
-
-    //     highlighter.remove(elementView, );
-    // });
 
     document.addEventListener('click', (event) => {
         dispatch(
