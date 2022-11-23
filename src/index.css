@@ -12,6 +12,7 @@ code {
     monospace;
 }
 
+/* layout css */
 .frame {
   height: 95vh;
   padding: 0px;
@@ -58,6 +59,49 @@ code {
 .navbar-brand > div {
   color: #f4f4f4f4
 }
+
+/* cavas styling */
+
+/* .joint-element .container {
+  fill: '#00000000'
+} */
+
+/* cavas styling */
+
+/* .joint-element .highlighted {
+  outline: none;
+  fill: #ecf0f1;
+  stroke: #bdc3c7;
+  cursor: crosshair;
+} */
+
+/* .joint-element .body {
+  fill: #68DDD5;
+  stroke: #44CCC3;
+  stroke-opacity: 0.5;
+  transition: all 0.2s;
+} */
+
+/* .joint-element circle {
+  fill: #fff;
+  stroke: #7f8c8d;
+  stroke-opacity: 0.5;
+  stroke-width: 2px;
+}
+
+.joint-element.live text {
+  fill: #ffffff;
+}
+
+.joint-element.live .body {
+  fill: #FEB662;
+  stroke: #CF9452;
+} */
+
+/* .joint-element text {
+  fill: #fff;
+} */
+
 
 /* a bug here */
 /* g > .block {
@@ -136,31 +180,6 @@ code {
   stroke: none;
 }
 
-.joint-element .highlighted {
-  outline: none;
-  fill: #ecf0f1;
-  stroke: #bdc3c7;
-  cursor: crosshair;
-}
-
-.joint-element .body {
-  fill: #68DDD5;
-  stroke: #44CCC3;
-  stroke-opacity: 0.5;
-  transition: all 0.2s;
-}
-
-.joint-element circle {
-  fill: #fff;
-  stroke: #7f8c8d;
-  stroke-opacity: 0.5;
-  stroke-width: 2px;
-}
-
-.joint-element text {
-  fill: #fff;
-}
-
 .joint-link.live > .connection {
   stroke: #7c68fc;
   stroke-width: 3px;
@@ -170,14 +189,6 @@ code {
   stroke: #7C68FD;
 }
 
-.joint-element.live .body {
-  fill: #FEB662;
-  stroke: #CF9452;
-}
-
-.joint-element.live text {
-  fill: #ffffff;
-}
 .wire {
   stroke: #4B4F6A;
 }
