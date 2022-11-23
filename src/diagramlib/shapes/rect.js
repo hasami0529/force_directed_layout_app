@@ -82,6 +82,13 @@ export function createContainer(paper, graph) {
         action: function(evt, elementView, _) {
             const model = elementView.model
 
+            for (const e of model.getEmbeddedCells()) {
+                if (e instanceof dia.Element) {
+                    e.attr('./display', 'none')
+                }
+                
+            }
+
             // remove opacity of expanded container
             model.removeAttr('body/strokeDasharray')
             model.removeAttr('body/opacity')
@@ -89,13 +96,11 @@ export function createContainer(paper, graph) {
 
             model.attr('body', {
                 class: 'collapsed-container',
-                fill: 'black'
+                fill: '#7a72e5'
             })
 
             model.toFront({deep: false})
             model.set('z', 1000)
-            // model.
-            // alert('View id: ' + this.id + '\n' + 'Model id: ' + this.model.id);
         },
         markup: [
             {
