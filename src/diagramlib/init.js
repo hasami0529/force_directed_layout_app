@@ -5,6 +5,7 @@ import { inspectActions } from '../store/slice/inspect'
 import { contextMenuActions } from '../store/slice/contextmenu'
 import { taglibActions } from '../store/slice/taglib';
 import { canvasActions } from '../store/slice/canvas';
+import { blockToolView, expandedContainerToolsView, collapsedContainerToolsView } from './shapes/tools'
 
 export function initPaperEvents(paper, dispatch) {
 
@@ -48,6 +49,19 @@ export function initPaperEvents(paper, dispatch) {
     })
 
     paper.on('element:mouseenter', function(elementView) {
+        switch(elementView.model.role) {
+            case 'Block':
+                elementView.addTools(blockToolView)
+                break
+            case 'expanded-container':
+                elementView.addTools(expandedContainerToolsView)
+                break
+            case 'collapsed-container':
+                elementView.addTools(collapsedContainerToolsView)
+                break
+            default :
+                console.log("nothing happened")
+        }
         elementView.showTools();
     });
     
@@ -55,7 +69,7 @@ export function initPaperEvents(paper, dispatch) {
         elementView.hideTools();
     });
 
-    // for range selection
+    // for create container/group
     paper.on({
         'blank:pointerdown': function(evt, x, y) {
             var data = evt.data = {};
@@ -129,14 +143,10 @@ export function init() {
 
 export function demo(graph, paper) {
     if (!graph || !paper) return
-
     const rect1 = createBlock(paper, graph).rect
-
     const rect2 = createBlock(paper, graph).rect
-
     rect2.position(100,200)
-
-    console.log(rect1.role)
+    // console.log(rect2)
 }
 
 export function addBlock(paper, graph) {

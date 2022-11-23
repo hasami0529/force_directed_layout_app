@@ -1,4 +1,5 @@
-import {dia, shapes, elementTools } from 'jointjs';
+import {dia, shapes } from 'jointjs';
+
 
 const attrs = {
     body: {
@@ -38,7 +39,6 @@ const attrs = {
     // }
 }
 
-
 const containerAttrs = {
     attrs: {
         body: {
@@ -54,117 +54,25 @@ const containerAttrs = {
     },
 }
 
+
+
 export function createContainer(paper, graph) {
     var container = new shapes.standard.Rectangle(containerAttrs)
-    container.role = "Container"
+    container.role = "expanded-container"
     // attach to graph and generate a view of element
     container.addTo(paper.model)
     var elementView = container.findView(paper);
     container.attr("label/text", elementView.id)
 
-    // Tools
-    var boundaryTool = new elementTools.Boundary({
-        padding: 20,
-        rotate: true,
-        useModelGeometry: true,
-    });
-
-    var removeButton = new elementTools.Remove({
-        action: (_, elementView) => elementView.remove()
-    });
-
-    var collapseButton = new elementTools.Button({
-        focusOpacity: 0.5,
-        // top-right corner
-        x: '100%',
-        y: '0%',
-        offset: { x: -5, y: -5 },
-        action: function(evt, elementView, _) {
-            const model = elementView.model
-
-            for (const e of model.getEmbeddedCells()) {
-                if (e instanceof dia.Element) {
-                    e.attr('./display', 'none')
-                }
-                
-            }
-
-            // remove opacity of expanded container
-            model.removeAttr('body/strokeDasharray')
-            model.removeAttr('body/opacity')
-            model.removeAttr('body/fillOpacity')
-
-            model.attr('body', {
-                class: 'collapsed-container',
-                fill: '#7a72e5'
-            })
-
-            model.toFront({deep: false})
-            model.set('z', 1000)
-        },
-        markup: [
-            {
-                // Copied from SVGViewer
-                // I want to change icon
-                tagName: 'path',
-                selector: 'icon',
-                attributes: {
-                    'd': 'M7.5 0.234C3.486 0.234 0.234 3.486 0.234 7.5s3.252 7.266 7.266 7.266 7.266 -3.252 7.266 -7.266S11.514 0.234 7.5 0.234zM3.633 8.672c-0.193 0 -0.352 -0.158 -0.352 -0.352v-1.641c0 -0.193 0.158 -0.352 0.352 -0.352h7.734c0.193 0 0.352 0.158 0.352 0.352v1.641c0 0.193 -0.158 0.352 -0.352 0.352H3.633z',
-                    'fill': '#0A1EE6',
-                }
-            },
-        ]
-    });
-
-    var toolsView = new dia.ToolsView({
-        tools: [
-            boundaryTool,
-            removeButton,
-            // connectButton,
-            collapseButton,
-        ]
-    });
-
-
-    elementView.addTools(toolsView);
+    // elementView.addTools(expandedContainerToolsView);
     elementView.showTools()
 
     return { container, elementView }
 }
 
 export function createBlock(paper, graph) {
+
     var rect = new shapes.standard.Rectangle(attrs);
-
-    // Tools
-    var boundaryTool = new elementTools.Boundary({
-        padding: 20,
-        rotate: true,
-        useModelGeometry: true,
-    });
-
-    var removeButton = new elementTools.Remove();
-    const connectButton = new elementTools.Connect({
-        x: '100%',
-        y: '0%',
-        offset: { x: -5, y: -5 },
-        magnet: 'body'
-    });
-
-    // only in jointjs 3.6
-    // const hoverButton = new elementTools.HoverConnect({
-    //     useModelGeometry: true,
-    //     trackPath: (view) => view.model.attr(['body', 'd'])
-    // });
-
-    var toolsView = new dia.ToolsView({
-        tools: [
-            boundaryTool,
-            removeButton,
-            connectButton
-        ]
-    });
-
-
     rect.attr(attrs)
     rect.role = 'Block'
     rect.position(100, 30);
@@ -172,7 +80,8 @@ export function createBlock(paper, graph) {
     rect.addTo(graph)
 
     var elementView = rect.findView(paper);
-    elementView.addTools(toolsView);
+    // elementView.addTools(blockToolView);
     elementView.hideTools()
     return { rect, elementView }
+
 }
