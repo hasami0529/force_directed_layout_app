@@ -1,25 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { dia } from 'jointjs'
-
-// utils to get model info
-function getLabel(model) {
-  if (model instanceof dia.Element){
-    return model.attributes.attrs.label.text
-    // if use model.attributes.label.text will get the result before editting (VIEW version)
-  }
-}
-
-function modelToInfo(model) {
-  if (model instanceof dia.Element){
-    console.log(model)
-    return {
-      id: model.id,
-      role: model.role,
-      label: getLabel(model)
-    }
-  }
-
-}
+import { modelToInfo } from '../../utils'
 
 export const inspectSlice = createSlice({
   name: "inspect",
