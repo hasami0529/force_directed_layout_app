@@ -1,14 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-
-function fake3Tag(id) {
-    var l = []
-    for (var i=1; i < 4; i++) {
-        l.push({ content: `${id}'s fake tag ${i}`} )
-    }
-    return l
-}
-
+import { fake3Tag } from '../../utils'
 
 export const taglibSlice = createSlice({
   name: "taglib",
