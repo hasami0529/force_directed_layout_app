@@ -5,6 +5,7 @@ import { dia } from 'jointjs'
 function getLabel(model) {
   if (model instanceof dia.Element){
     return model.attributes.attrs.label.text
+    // if use model.attributes.label.text will get the result before editting (VIEW version)
   }
 }
 
