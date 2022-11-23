@@ -1,4 +1,4 @@
-import {dia, shapes, highlighters, elementTools, g } from 'jointjs';
+import {dia, shapes, highlighters, g } from 'jointjs';
 import { createBlock, createContainer }  from './shapes/rect'
 import createNormalLink from './shapes/link'
 import { inspectActions } from '../store/slice/inspect'
