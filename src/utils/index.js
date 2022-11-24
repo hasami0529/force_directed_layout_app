@@ -29,3 +29,10 @@ export function modelToInfo(model) {
 export function getRole(model) {
     return model.role
 }
+
+export function setRole(model, role) {
+    model.role = role
+    // model.attr('body', {
+    //     class: role
+    // })
+}
