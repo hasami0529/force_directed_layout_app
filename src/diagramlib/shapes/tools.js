@@ -2,11 +2,20 @@ import { elementTools, dia } from "jointjs";
 import { setRole } from "../../utils"
 
 function collapse(model) {
+    const graph = model.graph
 
-    for (const e of model.getEmbeddedCells()) {
-        if (e instanceof dia.Element) {
+    let links = []
+
+    // "getEmbeddedCells" return elements(blocks) only not including links so...
+    for (const e of model.getEmbeddedCells({deep: true})) {
+        links = [ ...graph.getConnectedLinks(e), ...links ] // may push same link twice
+        if (e instanceof dia.Cell) {
             e.attr('./display', 'none')
         }
+    }
+
+    for (const l of links) {
+        l.attr('./display', 'none')
     }
 
     // remove opacity of expanded container
@@ -22,11 +31,17 @@ function collapse(model) {
 }
 
 function expand(model) {
+    const graph = model.graph
+    let links = []
 
     for (const e of model.getEmbeddedCells()) {
-        if (e instanceof dia.Element) {
+        links = [ ...graph.getConnectedLinks(e), ...links ] // may push same link twice
+        if (e instanceof dia.Cell) {
             e.attr('./display', 'inherit')
         }
+    }
+    for (const l of links) {
+        l.attr('./display', 'inherit')
     }
 
     model.attr('body', {
