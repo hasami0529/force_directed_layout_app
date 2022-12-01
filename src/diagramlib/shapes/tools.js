@@ -115,6 +115,7 @@ export const expandedContainerToolsView = new dia.ToolsView({
         boundaryTool,
         removeButton,
         collapseButton,
+        connectButton
     ]
 });
 
@@ -148,5 +149,6 @@ export const collapsedContainerToolsView = new dia.ToolsView({
         boundaryTool,
         removeButton,
         expandButton,
+        connectButton
     ]
 });
