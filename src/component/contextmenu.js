@@ -33,10 +33,19 @@ function PaperMenu(props) {
 
 function BlockMenu(props) {
   const dispatch = useDispatch();
+  const states = useSelector(selectContextMenu);
+
+  function addPort() {
+    dispatch(
+      canvasActions.addPort({ target: states.target })
+    )
+  }
+
+  
 
   return (
     <React.Fragment>
-      <button type= "button" class="btn btn-light" >add Port</button>
+      <button type= "button" class="btn btn-light" onClick={addPort}>add Port</button>
       <button type= "button" class="btn btn-light">Option2</button>
       <button type= "button" class="btn btn-light">Option3</button>
     </React.Fragment>

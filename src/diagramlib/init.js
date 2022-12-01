@@ -6,6 +6,7 @@ import { contextMenuActions } from '../store/slice/contextmenu'
 import { taglibActions } from '../store/slice/taglib';
 import { canvasActions } from '../store/slice/canvas';
 import { blockToolView, expandedContainerToolsView, collapsedContainerToolsView } from './shapes/tools'
+import { leftPort } from './shapes/ports'
 
 export function initPaperEvents(paper, dispatch) {
 
@@ -50,7 +51,7 @@ export function initPaperEvents(paper, dispatch) {
 
     paper.on('element:contextmenu', function(cellView, evt) {
         dispatch(
-            contextMenuActions.showBlockMenu({ evt, })
+            contextMenuActions.showBlockMenu({ evt, target: cellView})
         )
     })
 
@@ -168,4 +169,8 @@ export function setLabel(model, label) {
     } else {
         console.warning('model is not as expected')
     }
+}
+
+export function addPort(model) {
+    model.addPort(leftPort)
 }
