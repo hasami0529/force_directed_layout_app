@@ -4,6 +4,7 @@ export const contextMenuSlice = createSlice({
   initialState: {
 	show: false,
 	event: {pageX: 100, pageY: 100},
+	menu: 'default'
   },
   reducers: {
 	toggle: (state, action) => {
@@ -19,6 +20,15 @@ export const contextMenuSlice = createSlice({
 		action.payload.event.preventDefault()
 		state.event = action.payload.event
 		state.show = true
+		state.menu = 'paper'
+	},
+	showBlockMenu: (state, action) => {
+		const { evt } = action.payload
+		evt.preventDefault()
+		state.event = evt
+		console.log(state.event)
+		state.show = true
+		state.menu = 'block'
 	}
   },
 });

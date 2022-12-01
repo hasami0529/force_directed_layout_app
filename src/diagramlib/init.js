@@ -48,6 +48,12 @@ export function initPaperEvents(paper, dispatch) {
         )
     })
 
+    paper.on('element:contextmenu', function(cellView, evt) {
+        dispatch(
+            contextMenuActions.showBlockMenu({ evt, })
+        )
+    })
+
     paper.on('element:mouseenter', function(elementView) {
         switch(elementView.model.role) {
             case 'Block':
@@ -136,17 +142,20 @@ export function init() {
         defaultLink: createNormalLink
     });
 
-
-
     return { graph, paper }
 }
 
 export function demo(graph, paper) {
-    // if (!graph || !paper) return
-    // const rect1 = createBlock(paper, graph).rect
-    // const rect2 = createBlock(paper, graph).rect
-    // rect2.position(100,200)
-    // console.log(rect2)
+    const { rect: b1, elementView: v1 } = createBlock(paper, graph)
+    const { rect: b2, elementView: v2 } = createBlock(paper, graph)
+    b1.position(30,50)
+
+    const link = createNormalLink()
+    link.source(b1)
+    link.target(b2)
+
+    link.addTo(graph)
+
 }
 
 export function addBlock(paper, graph) {
