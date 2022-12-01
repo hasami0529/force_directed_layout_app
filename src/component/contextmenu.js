@@ -35,9 +35,9 @@ function BlockMenu(props) {
   const dispatch = useDispatch();
   const states = useSelector(selectContextMenu);
 
-  function addPort() {
+  function addPort(direction) {
     dispatch(
-      canvasActions.addPort({ target: states.target })
+      canvasActions.addPort({ target: states.target, direction })
     )
   }
 
@@ -45,9 +45,10 @@ function BlockMenu(props) {
 
   return (
     <React.Fragment>
-      <button type= "button" class="btn btn-light" onClick={addPort}>add Port</button>
-      <button type= "button" class="btn btn-light">Option2</button>
-      <button type= "button" class="btn btn-light">Option3</button>
+      <button type= "button" class="btn btn-light" onClick={ () => addPort('left')}>Add Port on Left</button>
+      <button type= "button" class="btn btn-light" onClick={ () => addPort('right')}>Add Port on Right</button>
+      <button type= "button" class="btn btn-light" onClick={ () => addPort('top')}>Add Port on Top</button>
+      <button type= "button" class="btn btn-light" onClick={ () => addPort('bottom')}>Add Port on Bottom</button>
     </React.Fragment>
   )
 }

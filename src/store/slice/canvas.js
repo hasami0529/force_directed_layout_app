@@ -32,8 +32,8 @@ export const canvasSlice = createSlice({
 		state.focus = action.payload.model
 	},
 	addPort: (state, action) => {
-		const { target } = action.payload
-		addPort(target)
+		const { target, direction } = action.payload
+		addPort(target, direction)
 	}
   },
 });
