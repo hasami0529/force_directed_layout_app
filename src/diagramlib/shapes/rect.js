@@ -1,5 +1,5 @@
-import { topPort, bottomPort, rightPort, leftPort } from "./ports";
-import {dia, shapes, highlighters, elementTools } from 'jointjs';
+import {dia, shapes } from 'jointjs';
+
 
 const attrs = {
     body: {
@@ -7,7 +7,7 @@ const attrs = {
         class: 'block'
     },
     label: {
-        text: 'Hello',
+        text: 'block',
         fill: 'black'
     },
     // We don't need ports for now
@@ -39,50 +39,49 @@ const attrs = {
     // }
 }
 
-export default function createBlock(paper, graph) {
+const containerAttrs = {
+    attrs: {
+        body: {
+            class: 'expanded-container',
+            strokeDasharray: "10 5",
+            opacity: "100%",
+            fillOpacity: 0,
+        },
+        label: {
+            label: "block",
+            fill: "black",
+        }
+    },
+}
+
+
+
+export function createContainer(paper, graph) {
+    var container = new shapes.standard.Rectangle(containerAttrs)
+    container.role = "expanded-container"
+    // attach to graph and generate a view of element
+    container.addTo(paper.model)
+    var elementView = container.findView(paper);
+    container.attr("label/text", elementView.id)
+
+    // elementView.addTools(expandedContainerToolsView);
+    elementView.showTools()
+
+    return { container, elementView }
+}
+
+export function createBlock(paper, graph) {
+
     var rect = new shapes.standard.Rectangle(attrs);
-
-    // Tools
-    var boundaryTool = new elementTools.Boundary({
-        padding: 20,
-        rotate: true,
-        useModelGeometry: true,
-    });
-
-    var removeButton = new elementTools.Remove();
-    const connectButton = new elementTools.Connect({
-        x: '100%',
-        y: '0%',
-        offset: { x: -5, y: -5 },
-        magnet: 'body'
-    });
-
-    // only in jointjs 3.6
-    // const hoverButton = new elementTools.HoverConnect({
-    //     useModelGeometry: true,
-    //     trackPath: (view) => view.model.attr(['body', 'd'])
-    // });
-
-    var toolsView = new dia.ToolsView({
-        tools: [
-            boundaryTool,
-            removeButton,
-            connectButton
-        ]
-    });
-
-
     rect.attr(attrs)
     rect.role = 'Block'
     rect.position(100, 30);
     rect.resize(100, 40);
-
     rect.addTo(graph)
 
     var elementView = rect.findView(paper);
-    elementView.addTools(toolsView);
+    // elementView.addTools(blockToolView);
     elementView.hideTools()
     return { rect, elementView }
-}
 
-// export default attrs;
+}

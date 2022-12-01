@@ -51,12 +51,13 @@ function editMode() {
 function EditableField(props) {
   const [editing, setEditing] = useState(false)
   const dispatch = useDispatch()
+
   if (editing) {
     return (
       <TextField
         autoFocus="true"
         onBlur={() => setEditing(false)}
-        onChange={(e) => { handleOnChange(e, dispatch)}}
+        onChange={(e) => { handleOnChange(e, dispatch); props.row.value = e.target.value }}
         hiddenLabel
         id="filled-hidden-label-small"
         variant="filled"

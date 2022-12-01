@@ -14,7 +14,7 @@ export function ContextMenu() {
       canvasActions.addBlock()
     )
     if (graph) {
-      console.log(graph.getElements())
+      // console.log(graph.getElements())
       dispatch(
         taglibActions.renderElements({ elements: graph.getElements() })
       )
