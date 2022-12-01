@@ -142,10 +142,10 @@ export function init() {
 }
 
 export function demo(graph, paper) {
-    if (!graph || !paper) return
-    const rect1 = createBlock(paper, graph).rect
-    const rect2 = createBlock(paper, graph).rect
-    rect2.position(100,200)
+    // if (!graph || !paper) return
+    // const rect1 = createBlock(paper, graph).rect
+    // const rect2 = createBlock(paper, graph).rect
+    // rect2.position(100,200)
     // console.log(rect2)
 }
 
