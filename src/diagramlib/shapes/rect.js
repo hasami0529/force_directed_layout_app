@@ -7,7 +7,7 @@ const attrs = {
         class: 'block'
     },
     label: {
-        text: 'Hello',
+        text: 'block',
         fill: 'black'
     },
     // We don't need ports for now
@@ -48,7 +48,7 @@ const containerAttrs = {
             fillOpacity: 0,
         },
         label: {
-            label: "hello",
+            label: "block",
             fill: "black",
         }
     },
