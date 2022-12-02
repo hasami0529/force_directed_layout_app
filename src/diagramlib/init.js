@@ -151,6 +151,9 @@ export function demo(graph, paper) {
     const { rect: b2, elementView: v2 } = createBlock(paper, graph)
     b1.position(30,50)
 
+    // b1.addPort(
+    //     { group: 'right', attrs: { label: { text: 'in2' }}}
+    // );
 
 }
 
@@ -167,7 +170,12 @@ export function setLabel(model, label) {
 }
 
 export function addPort(model, direction) {
-    port.name = direction
+    
+
     console.log(port)
-    model.addPort(rightPort)
+
+    model.addPort({
+        group: direction,
+        // attrs: { label: { text: 'in2' }}
+    })
 }
