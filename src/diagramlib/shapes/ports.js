@@ -28,35 +28,6 @@ export let port = {
     }]
 };
 
-var outPorts = {
-    position: {
-        name: 'right'
-    },
-    attrs: {
-        portBody: {
-            magnet: true,
-            r: 10,
-            fill: '#E6A502',
-            stroke:'#023047'
-        }
-    },
-    label: {
-        position: {
-            name: 'right',
-            args: { y: 6 }
-        },
-        markup: [{
-            tagName: 'text',
-            selector: 'label',
-            className: 'label-text'
-        }]
-    },
-    markup: [{
-        tagName: 'circle',
-        selector: 'portBody'
-    }]
-};
-
 export const leftPort = {
     position: {
         name: 'left',
