@@ -45,7 +45,7 @@ function a11yProps(index) {
 }
 
 export function Taglib() {
-  const states = useSelector(selectTaglib); // <-- 拿取資料
+  const states = useSelector(selectTaglib);
   const dispatch = useDispatch();
   const [value, setValue] = React.useState(0)
   const { graph } = useSelector(selectCanvas)
@@ -53,10 +53,6 @@ export function Taglib() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  function test() {
-    console.log(states.elements)
-  }
 
   return (
     <Box
@@ -76,7 +72,8 @@ export function Taglib() {
 
       <TabPanel value={value} index={0}>
         <div>
-          {states.tags.map((i) => (
+          {console.log([] instanceof Array)}
+          {states.tags instanceof Array && states.tags.map((i) => (
             <div class='form-check' type="checkbox" value="" >      
               <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></input>
               <label class="form-check-label" for="flexCheckDefault">
