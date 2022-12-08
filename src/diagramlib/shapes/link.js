@@ -1,6 +1,7 @@
 import { shapes } from 'jointjs'
 
 export default function createNormalLink(cellView, magnet){
+    console.log(magnet)
     return new shapes.standard.Link({
         attrs: {
             line: {
@@ -17,7 +18,9 @@ export default function createNormalLink(cellView, magnet){
                 connection: true,
                 strokeWidth: 10,
                 strokeLinejoin: 'round'
-            }
-        }
+            },
+            
+        },
+        
     })
 }

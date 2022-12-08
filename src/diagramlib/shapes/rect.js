@@ -1,4 +1,5 @@
-import {dia, shapes } from 'jointjs';
+import { shapes } from 'jointjs';
+import { leftPort, rightPort, topPort, bottomPort } from './ports'
 
 
 const attrs = {
@@ -10,33 +11,14 @@ const attrs = {
         text: 'block',
         fill: 'black'
     },
-    // We don't need ports for now
-    // ports: {
-    //     groups: {
-    //         'left': leftPort,
-    //         'right': rightPort,
-    //         'top': topPort,
-    //         'bottom': bottomPort,
-    //     },
-    //     items: [
-    //         { 
-    //             group: 'left',
-    //             attrs: { label: { text: 'in1' }}
-    //         },
-    //         { 
-    //             group: 'right',
-    //             attrs: { label: { text: 'in2' }}
-    //         },
-    //         { 
-    //             group: 'top',
-    //             attrs: { label: { text: 'out' }}
-    //         },
-    //         { 
-    //             group: 'bottom',
-    //             attrs: { label: { text: 'out' }}
-    //         }
-    //     ]
-    // }
+    ports: {
+        groups: {
+            'left': leftPort,
+            'right': rightPort,
+            'top': topPort,
+            'bottom': bottomPort,
+        },
+    }
 }
 
 const containerAttrs = {
@@ -52,6 +34,14 @@ const containerAttrs = {
             fill: "black",
         }
     },
+    ports: {
+        groups: {
+            'left': leftPort,
+            'right': rightPort,
+            'top': topPort,
+            'bottom': bottomPort,
+        },
+    }
 }
 
 

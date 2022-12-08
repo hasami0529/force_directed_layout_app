@@ -6,6 +6,7 @@ import { contextMenuActions } from '../store/slice/contextmenu'
 import { taglibActions, showTags } from '../store/slice/taglib';
 import { canvasActions } from '../store/slice/canvas';
 import { blockToolView, expandedContainerToolsView, collapsedContainerToolsView } from './shapes/tools'
+import { port } from './shapes/ports'
 
 export function initPaperEvents(paper, dispatch) {
 
@@ -45,6 +46,12 @@ export function initPaperEvents(paper, dispatch) {
     document.addEventListener('click', (event) => {
         dispatch(
             contextMenuActions.disable({event})
+        )
+    })
+
+    paper.on('element:contextmenu', function(cellView, evt) {
+        dispatch(
+            contextMenuActions.showBlockMenu({ evt, target: cellView})
         )
     })
 
@@ -136,17 +143,29 @@ export function init() {
         defaultLink: createNormalLink
     });
 
-
-
     return { graph, paper }
 }
 
 export function demo(graph, paper) {
-    // if (!graph || !paper) return
-    // const rect1 = createBlock(paper, graph).rect
-    // const rect2 = createBlock(paper, graph).rect
-    // rect2.position(100,200)
-    // console.log(rect2)
+    const { rect: b1, elementView: v1 } = createBlock(paper, graph)
+    const { rect: b2, elementView: v2 } = createBlock(paper, graph)
+    b1.position(30,50)
+
+    const link = createNormalLink()
+    link.source(b1, {
+        connectionPoint: {
+            name: 'bbox',
+            args: {
+                offset: 10,
+                stroke: true,
+            }
+        }
+    });
+
+    link.target(b2)
+
+    // link.addTo(graph)
+
 }
 
 export function addBlock(paper, graph) {
@@ -159,4 +178,12 @@ export function setLabel(model, label) {
     } else {
         console.warning('model is not as expected')
     }
+}
+
+export function addPort(model, direction) {
+
+    model.addPort({
+        group: direction,
+        // attrs: { label: { text: 'in2' }}
+    })
 }

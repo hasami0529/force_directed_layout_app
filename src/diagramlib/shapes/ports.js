@@ -1,13 +1,14 @@
-var port = {
-    // position: {
-    //     name: 'left'
-    // },
+export let port = {
     attrs: {
         portBody: {
             magnet: true,
-            r: 10,
-            fill: '#abdbe3',
-            stroke: '#f8568a'
+            // r: 10,
+            fill: '#c8b029',
+            stroke: 'black',
+            width: 10,
+            height: 10,
+            x: -5,
+            y: -5,
         }
     },
     // label: {
@@ -22,37 +23,8 @@ var port = {
     //     }]
     // },
     markup: [{
-        tagName: 'circle',
-        selector: 'portBody'
-    }]
-};
-
-var outPorts = {
-    position: {
-        name: 'right'
-    },
-    attrs: {
-        portBody: {
-            magnet: true,
-            r: 10,
-            fill: '#E6A502',
-            stroke:'#023047'
-        }
-    },
-    label: {
-        position: {
-            name: 'right',
-            args: { y: 6 }
-        },
-        markup: [{
-            tagName: 'text',
-            selector: 'label',
-            className: 'label-text'
-        }]
-    },
-    markup: [{
-        tagName: 'circle',
-        selector: 'portBody'
+        tagName: 'rect',
+        selector: 'portBody',
     }]
 };
 

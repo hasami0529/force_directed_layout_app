@@ -94,18 +94,18 @@ const collapseButton = new elementTools.Button({
     ]
 });
 
-const connectButton = new elementTools.Connect({
-    x: '100%',
-    y: '0%',
-    offset: { x: -5, y: -5 },
-    magnet: 'body'
-});
+// connection with no ports is not allowed
+// const connectButton = new elementTools.Connect({
+//     x: '100%',
+//     y: '0%',
+//     offset: { x: -5, y: -5 },
+//     magnet: 'port'
+// });
 
 export const blockToolView = new dia.ToolsView({
     tools: [
         boundaryTool,
         removeButton,
-        connectButton
     ]
 });
 
@@ -115,7 +115,6 @@ export const expandedContainerToolsView = new dia.ToolsView({
         boundaryTool,
         removeButton,
         collapseButton,
-        connectButton
     ]
 });
 
@@ -149,6 +148,5 @@ export const collapsedContainerToolsView = new dia.ToolsView({
         boundaryTool,
         removeButton,
         expandButton,
-        connectButton
     ]
 });
