@@ -6,7 +6,7 @@ import { contextMenuActions } from '../store/slice/contextmenu'
 import { taglibActions } from '../store/slice/taglib';
 import { canvasActions } from '../store/slice/canvas';
 import { blockToolView, expandedContainerToolsView, collapsedContainerToolsView } from './shapes/tools'
-import { port, rightPort } from './shapes/ports'
+import { port } from './shapes/ports'
 
 export function initPaperEvents(paper, dispatch) {
 
@@ -151,9 +151,20 @@ export function demo(graph, paper) {
     const { rect: b2, elementView: v2 } = createBlock(paper, graph)
     b1.position(30,50)
 
-    // b1.addPort(
-    //     { group: 'right', attrs: { label: { text: 'in2' }}}
-    // );
+    const link = createNormalLink()
+    link.source(b1, {
+        connectionPoint: {
+            name: 'bbox',
+            args: {
+                offset: 10,
+                stroke: true,
+            }
+        }
+    });
+
+    link.target(b2)
+
+    // link.addTo(graph)
 
 }
 
@@ -170,9 +181,6 @@ export function setLabel(model, label) {
 }
 
 export function addPort(model, direction) {
-    
-
-    console.log(port)
 
     model.addPort({
         group: direction,

@@ -54,10 +54,6 @@ export function Taglib() {
     setValue(newValue);
   };
 
-  function test() {
-    console.log(states.elements)
-  }
-
   return (
     <Box
       sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: "100%" }}
