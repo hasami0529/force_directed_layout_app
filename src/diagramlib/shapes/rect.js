@@ -18,24 +18,6 @@ const attrs = {
             'top': topPort,
             'bottom': bottomPort,
         },
-        // items: [
-        //     { 
-        //         group: 'left',
-        //         attrs: { label: { text: 'in1' }}
-        //     },
-        //     { 
-        //         group: 'right',
-        //         attrs: { label: { text: 'in2' }}
-        //     },
-        //     { 
-        //         group: 'top',
-        //         attrs: { label: { text: 'out' }}
-        //     },
-        //     { 
-        //         group: 'bottom',
-        //         attrs: { label: { text: 'out' }}
-        //     }
-        // ]
     }
 }
 
@@ -52,6 +34,14 @@ const containerAttrs = {
             fill: "black",
         }
     },
+    ports: {
+        groups: {
+            'left': leftPort,
+            'right': rightPort,
+            'top': topPort,
+            'bottom': bottomPort,
+        },
+    }
 }
 
 
