@@ -37,6 +37,27 @@ function TabPanel(props) {
   );
 }
 
+function BlockGraph() {
+  const states = useSelector(selectTaglib);
+  return (
+    <TabPanel >
+    coming soon
+      <TreeItem nodeId="1" label="Blocks">
+        { console.log(states.elements)}
+        { states.elements.map(
+          (el) => {
+            if (el.role === 'Block')
+              return (
+                <TreeItem label={el.attributes.attrs.label.text} />
+              )
+            }
+          )
+        }
+      </TreeItem>
+    </TabPanel>
+  )
+}
+
 function a11yProps(index) {
   return {
     id: `vertical-tab-${index}`,
@@ -72,50 +93,19 @@ export function Taglib() {
 
       <TabPanel value={value} index={0}>
         <div>
-          {console.log([] instanceof Array)}
-          {states.tags instanceof Array && states.tags.map((i) => (
+          {/* {console.log(states.tags)} */}
+          {states.tags.map((i) => (
             <div class='form-check' type="checkbox" value="" >      
               <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></input>
               <label class="form-check-label" for="flexCheckDefault">
-                {i.content}
+                {i}
               </label>
             </div>
           ))}
         </div>
       </TabPanel>
 
-      <TabPanel value={value} index={1}>
-        <TreeView
-          aria-label="file system navigator"
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
-          sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-        >
-          <TreeItem nodeId="1" label="Blocks">
-            { states.elements.map(
-              (el) => {
-                if (el.role === 'Block')
-                  return (
-                    <TreeItem label={el.attributes.attrs.label.text} />
-                  )
-                }
-              )
-            }
-          </TreeItem>
-
-          {/* <TreeItem nodeId="1" label="Applications">
-            <TreeItem nodeId="2" label="Calendar" />
-          </TreeItem>
-
-          <TreeItem nodeId="5" label="Documents">
-            <TreeItem nodeId="10" label="OSS" />
-            <TreeItem nodeId="6" label="MUI">
-              <TreeItem nodeId="8" label="index.js" />
-            </TreeItem>
-          </TreeItem> */}
-        </TreeView>
-      </TabPanel>
-
+      {/* <BlockGraph></BlockGraph> */}
     </Box>
   );
 }

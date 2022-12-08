@@ -1,28 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { fake3Tag } from '../../utils'
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-async function getTags(state, action) {
-  const baseURL = 'http://127.0.0.1:5000'
-  let data;
-  await axios({
-    method: 'get',
-    url: '/tags',
-    baseURL: baseURL,
-    responseType: 'json',
-    headers: {
-      'Acess-Controll-Allow-Origin': "*"
-    },
-  })
-  .then(function (response) {
-      data = response.data
-      return response.data
+export const showTags = createAsyncThunk(
+  'users/fetchByIdStatus',
+  async (userId, thunkAPI) => {
+    const baseURL = 'http://127.0.0.1:5000'
+    const response = await fetch(baseURL + "/tags", {
+      method: 'get',
+      headers: {
+        'Acess-Controll-Allow-Origin': "*"
+      },
     })
-
-  console.log(data)
-  state.tags = data
-  console.log(state.tags)
-}
+    return response.json()
+  }
+)
 
 export const taglibSlice = createSlice({
   name: "taglib",
@@ -32,11 +22,16 @@ export const taglibSlice = createSlice({
     elements: []
   },
   reducers: {
-    showTag: getTags,
     renderElements: (state, action) => {
       state.elements = action.payload.elements
-  }
+    },
   },
+  extraReducers: {
+    [showTags.fulfilled]: (state, action) => {
+      console.log(action.payload)
+      state.tags = action.payload
+    },
+  }
 });
 
 export const selectTaglib = (state) => state.taglib; // todo is respond to "name" in the slice

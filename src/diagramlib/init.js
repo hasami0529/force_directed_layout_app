@@ -3,7 +3,7 @@ import { createBlock, createContainer }  from './shapes/rect'
 import createNormalLink from './shapes/link'
 import { inspectActions } from '../store/slice/inspect'
 import { contextMenuActions } from '../store/slice/contextmenu'
-import { taglibActions } from '../store/slice/taglib';
+import { taglibActions, showTags } from '../store/slice/taglib';
 import { canvasActions } from '../store/slice/canvas';
 import { blockToolView, expandedContainerToolsView, collapsedContainerToolsView } from './shapes/tools'
 
@@ -30,7 +30,7 @@ export function initPaperEvents(paper, dispatch) {
                 canvasActions.setFocus({ model: elementView.model })
             )
             dispatch(
-                taglibActions.showTag({elementId: elementView.id})
+                showTags({elementId: elementView.id})
             )
             dispatch(
                 inspectActions.showBlockInfo({ model: elementView.model })
