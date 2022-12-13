@@ -1,26 +1,65 @@
-import { shapes } from 'jointjs'
+import { dia } from 'jointjs'
+
+var SlotLink = dia.Link.define('SlotLink', {
+    attrs: {
+        line: {
+            connection: true,
+            stroke: '#333333',
+            strokeWidth: 2,
+            strokeLinejoin: 'round',
+        },
+        wrapper: {
+            connection: true,
+            strokeWidth: 10,
+            strokeLinejoin: 'round'
+        },
+        slotHead: {
+                r: 5,
+                fill: 'white',
+                stroke: 'black',
+                atConnectionRatioKeepGradient: 0,
+                connection: true,
+                event: 'slot:click'
+        },
+        slotTail: {
+                r: 5,
+                fill: 'white',
+                stroke: 'black',
+                atConnectionRatioKeepGradient: 1,
+                connection: true,
+                event: 'slot:click'
+        }
+    }
+}, {
+    markup: [{
+        tagName: 'path',
+        selector: 'wrapper',
+        attributes: {
+            'fill': 'none',
+            'cursor': 'pointer',
+            'stroke': 'transparent'
+        }
+    },
+    {
+        tagName: 'path',
+        selector: 'line',
+        attributes: {
+            'fill': 'none',
+            'pointer-events': 'none'
+        }
+    },
+    {
+        tagName: 'circle',
+        selector: 'slotHead'
+    },
+    {
+        tagName: 'circle',
+        selector: 'slotTail'
+    }
+    ]
+}
+);
 
 export default function createNormalLink(cellView, magnet){
-    console.log(magnet)
-    return new shapes.standard.Link({
-        attrs: {
-            line: {
-                connection: true,
-                stroke: '#333333',
-                strokeWidth: 2,
-                strokeLinejoin: 'round',
-                targetMarker: {
-                    'type': 'path',
-                    'd': 'M 10 -5 0 0 10 5 z'
-                }
-            },
-            wrapper: {
-                connection: true,
-                strokeWidth: 10,
-                strokeLinejoin: 'round'
-            },
-            
-        },
-        
-    })
+    return new SlotLink();
 }

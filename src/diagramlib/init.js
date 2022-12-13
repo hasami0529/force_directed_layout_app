@@ -1,4 +1,4 @@
-import {dia, shapes, highlighters, g } from 'jointjs';
+import {dia, shapes, highlighters, g, linkTools } from 'jointjs';
 import { createBlock, createContainer }  from './shapes/rect'
 import createNormalLink from './shapes/link'
 import { inspectActions } from '../store/slice/inspect'
@@ -115,6 +115,10 @@ export function initPaperEvents(paper, dispatch) {
                 container.remove()
             }
         },
+    })
+
+    paper.on('slot:click', (e) => {
+        console.log('slot focus')
     })
 
 }
