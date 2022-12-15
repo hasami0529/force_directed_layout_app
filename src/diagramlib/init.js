@@ -1,12 +1,42 @@
-import {dia, shapes, highlighters, g, linkTools } from 'jointjs';
-import { createBlock, createContainer }  from './shapes/rect'
-import createNormalLink from './shapes/link'
+import { highlighters, g, shapes, dia } from 'jointjs'
+import { createContainer } from './shapes/rect'
+import { blockToolView, expandedContainerToolsView, collapsedContainerToolsView } from './shapes/tools'
+import { createNormalLink } from './shapes/link'
+
 import { inspectActions } from '../store/slice/inspect'
 import { contextMenuActions } from '../store/slice/contextmenu'
 import { showTags } from '../store/slice/taglib';
 import { canvasActions } from '../store/slice/canvas';
-import { blockToolView, expandedContainerToolsView, collapsedContainerToolsView } from './shapes/tools'
 
+export function init() {
+    var namespace = shapes;
+    var graph = new dia.Graph({}, { cellNamespace: namespace });
+
+    var paper = new dia.Paper({
+        el: document.getElementById("canvas"),
+        model: graph,
+        width: "100%",
+        height: "100%",
+        gridSize: 1,
+        cellViewNamespace: namespace,
+        // linkPinning: false,
+        highlighting: false,
+        embeddingMode: true,
+        defaultRouter: {
+            name: "orthogonal",
+            args: {
+                padding: 10,
+            }
+        },
+        snapLinks: true,
+        defaultLink: createNormalLink,
+        validateConnection: (cellViewS, magnetS, cellViewT, magnetT, end, linkView) => {
+            if (magnetT && magnetT.getAttribute('role') === 'Port') return true
+        }
+    });
+
+    return { graph, paper }
+}
 
 export function initPaperEvents(paper, dispatch) {
 
@@ -122,74 +152,4 @@ export function initPaperEvents(paper, dispatch) {
         console.log('slot focus')
     })
 
-}
-
-
-export function init() {
-    var namespace = shapes;
-    var graph = new dia.Graph({}, { cellNamespace: namespace });
-
-    var paper = new dia.Paper({
-        el: document.getElementById("canvas"),
-        model: graph,
-        width: "100%",
-        height: "100%",
-        gridSize: 1,
-        cellViewNamespace: namespace,
-        // linkPinning: false,
-        highlighting: false,
-        embeddingMode: true,
-        defaultRouter: {
-            name: "orthogonal",
-            args: {
-                padding: 10,
-            }
-        },
-        defaultLink: createNormalLink,
-        validateConnection: () => true // WIP
-    });
-
-    return { graph, paper }
-}
-
-export function demo(graph, paper) {
-    const { rect: b1, elementView: v1 } = createBlock(paper, graph)
-    const { rect: b2, elementView: v2 } = createBlock(paper, graph)
-    b1.position(30,50)
-
-    const link = createNormalLink()
-    link.source(b1, {
-        connectionPoint: {
-            name: 'bbox',
-            args: {
-                offset: 10,
-                stroke: true,
-            }
-        }
-    });
-
-    link.target(b2)
-
-    // link.addTo(graph)
-
-}
-
-export function addBlock(paper, graph) {
-    createBlock(paper, graph)
-}
-
-export function setLabel(model, label) {
-    if (model instanceof dia.Element) {
-        model.attr('label/text', label)
-    } else {
-        console.warning('model is not as expected')
-    }
-}
-
-export function addPort(model, direction) {
-
-    model.addPort({
-        group: direction,
-        // attrs: { label: { text: 'in2' }}
-    })
 }

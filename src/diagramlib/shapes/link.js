@@ -60,6 +60,6 @@ var SlotLink = dia.Link.define('SlotLink', {
 }
 );
 
-export default function createNormalLink(cellView, magnet){
+export function createNormalLink(cellView, magnet){
     return new SlotLink();
 }

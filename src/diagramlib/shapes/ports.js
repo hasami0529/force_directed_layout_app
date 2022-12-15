@@ -1,7 +1,7 @@
 export let port = {
     attrs: {
         portBody: {
-            magnet: true,
+            magnet: 'active',
             // r: 10,
             fill: '#c8b029',
             stroke: 'black',
@@ -9,6 +9,7 @@ export let port = {
             height: 10,
             x: -5,
             y: -5,
+            role: 'Port'
         }
     },
     // label: {
