@@ -19,19 +19,33 @@ export function init() {
         height: "100%",
         gridSize: 1,
         cellViewNamespace: namespace,
-
         preventContextMenu: true,
         preventDefaultBlankAction: true,
+
+
         highlighting: false,
         embeddingMode: true,
+
+        // connection related config
+        snapLinks: true,
+        linkPinning: false,
+        magnetThreshold: 'onleave',
         defaultRouter: {
             name: "orthogonal",
             args: {
                 padding: 10,
             }
         },
-        snapLinks: true,
         defaultLink: createNormalLink,
+        // defaultAnchor: function name(params) {
+        // },
+        defaultConnectionPoint: {
+            name: 'bbox',
+            args: {
+                offset: 5,
+                stroke: true,
+            }
+        },
         validateConnection: (cellViewS, magnetS, cellViewT, magnetT, end, linkView) => {
             if (magnetT && magnetT.getAttribute('role') === 'Port') return true
         }
