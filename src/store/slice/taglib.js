@@ -28,7 +28,6 @@ export const taglibSlice = createSlice({
   },
   extraReducers: {
     [showTags.fulfilled]: (state, action) => {
-      console.log(action.payload)
       state.tags = action.payload
     },
   }

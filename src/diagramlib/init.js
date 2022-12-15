@@ -3,10 +3,10 @@ import { createBlock, createContainer }  from './shapes/rect'
 import createNormalLink from './shapes/link'
 import { inspectActions } from '../store/slice/inspect'
 import { contextMenuActions } from '../store/slice/contextmenu'
-import { taglibActions, showTags } from '../store/slice/taglib';
+import { showTags } from '../store/slice/taglib';
 import { canvasActions } from '../store/slice/canvas';
 import { blockToolView, expandedContainerToolsView, collapsedContainerToolsView } from './shapes/tools'
-import { port } from './shapes/ports'
+
 
 export function initPaperEvents(paper, dispatch) {
 
@@ -117,6 +117,7 @@ export function initPaperEvents(paper, dispatch) {
         },
     })
 
+    // WIP
     paper.on('slot:click', (e) => {
         console.log('slot focus')
     })
@@ -144,7 +145,8 @@ export function init() {
                 padding: 10,
             }
         },
-        defaultLink: createNormalLink
+        defaultLink: createNormalLink,
+        validateConnection: () => true // WIP
     });
 
     return { graph, paper }
