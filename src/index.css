@@ -124,7 +124,7 @@ code {
   transition: all 0s;
 } */
 
-.link-tools .tool-remove circle {
+/* .link-tools .tool-remove circle {
   fill: white;
   stroke: #ccc;
   stroke-width: 1px;
@@ -191,5 +191,5 @@ code {
 
 .wire {
   stroke: #4B4F6A;
-}
+} */
 /* logic.css */
