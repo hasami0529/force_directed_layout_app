@@ -56,7 +56,7 @@ export function initPaperEvents(paper, dispatch) {
         )
     })
 
-    document.getElementById("canvas").addEventListener('contextmenu', (event) => {
+    document.addEventListener('contextmenu', (event) => {
         event.preventDefault()
     })
 
