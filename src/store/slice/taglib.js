@@ -1,22 +1,36 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { fake3Tag } from '../../utils'
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
+export const showTags = createAsyncThunk(
+  'users/fetchByIdStatus',
+  async (userId, thunkAPI) => {
+    const baseURL = 'http://127.0.0.1:5000'
+    const response = await fetch(baseURL + "/tags", {
+      method: 'get',
+      headers: {
+        'Acess-Controll-Allow-Origin': "*"
+      },
+    })
+    return response.json()
+  }
+)
 
 export const taglibSlice = createSlice({
   name: "taglib",
   initialState: {
-	elementId: '',
+	  elementId: '',
     tags: [],
     elements: []
   },
   reducers: {
-	showTag: (state, action) => {
-		state.elementId = action.payload.elementId
-        state.tags = fake3Tag(action.payload.elementId)
-	},
-  renderElements: (state, action) => {
-    state.elements = action.payload.elements
-  }
+    renderElements: (state, action) => {
+      state.elements = action.payload.elements
+    },
   },
+  extraReducers: {
+    [showTags.fulfilled]: (state, action) => {
+      state.tags = action.payload
+    },
+  }
 });
 
 export const selectTaglib = (state) => state.taglib; // todo is respond to "name" in the slice

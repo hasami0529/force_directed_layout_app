@@ -6,19 +6,20 @@ import { selectCanvas } from "../store/slice/canvas";
 // for tabs
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
+// import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TagIcon from '@mui/icons-material/Tag';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 
 // for Tree View
-import TreeView from '@mui/lab/TreeView';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+// import TreeView from '@mui/lab/TreeView';
+// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+// import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const { value, index,  } = props;
+  const states = useSelector(selectTaglib);
 
   return (
     <div
@@ -26,15 +27,41 @@ function TabPanel(props) {
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
-      {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      <Box sx ={{ padding: "15px", width: "100%"}}>
+        {/* {console.log(states.tags)} */}
+        {states.tags.map((i) => (
+          <div class='form-check' type="checkbox" value="" >      
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></input>
+            <label class="form-check-label" for="flexCheckDefault">
+              {i}
+            </label>
+          </div>
+        ))}
+      </Box>
     </div>
   );
+}
+
+function BlockGraph() {
+  const states = useSelector(selectTaglib);
+  return (
+    <TabPanel >
+    coming soon
+      <TreeItem nodeId="1" label="Blocks">
+        { console.log(states.elements)}
+        { states.elements.map(
+          (el) => {
+            if (el.role === 'Block')
+              return (
+                <TreeItem label={el.attributes.attrs.label.text} />
+              )
+            }
+          )
+        }
+      </TreeItem>
+    </TabPanel>
+  )
 }
 
 function a11yProps(index) {
@@ -45,10 +72,7 @@ function a11yProps(index) {
 }
 
 export function Taglib() {
-  const states = useSelector(selectTaglib); // <-- 拿取資料
-  const dispatch = useDispatch();
   const [value, setValue] = React.useState(0)
-  const { graph } = useSelector(selectCanvas)
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -56,7 +80,7 @@ export function Taglib() {
 
   return (
     <Box
-      sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: "100%" }}
+      sx={{  bgcolor: 'background.paper', display: 'flex', height: "100%" }}
     >
       <Tabs
         orientation="vertical"
@@ -71,50 +95,9 @@ export function Taglib() {
       </Tabs>
 
       <TabPanel value={value} index={0}>
-        <div>
-          {states.tags.map((i) => (
-            <div class='form-check' type="checkbox" value="" >      
-              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></input>
-              <label class="form-check-label" for="flexCheckDefault">
-                {i.content}
-              </label>
-            </div>
-          ))}
-        </div>
       </TabPanel>
 
-      <TabPanel value={value} index={1}>
-        <TreeView
-          aria-label="file system navigator"
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
-          sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-        >
-          <TreeItem nodeId="1" label="Blocks">
-            { states.elements.map(
-              (el) => {
-                if (el.role === 'Block')
-                  return (
-                    <TreeItem label={el.attributes.attrs.label.text} />
-                  )
-                }
-              )
-            }
-          </TreeItem>
-
-          {/* <TreeItem nodeId="1" label="Applications">
-            <TreeItem nodeId="2" label="Calendar" />
-          </TreeItem>
-
-          <TreeItem nodeId="5" label="Documents">
-            <TreeItem nodeId="10" label="OSS" />
-            <TreeItem nodeId="6" label="MUI">
-              <TreeItem nodeId="8" label="index.js" />
-            </TreeItem>
-          </TreeItem> */}
-        </TreeView>
-      </TabPanel>
-
+      {/* <BlockGraph></BlockGraph> */}
     </Box>
   );
 }
