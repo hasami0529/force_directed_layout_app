@@ -1,6 +1,28 @@
 import { elementTools, dia } from "jointjs";
 import { setRole } from "../../utils"
 
+const ResizeTool = elementTools.Control.extend({
+    getPosition: function (view) {
+      const model = view.model;
+      const { width, height } = model.size();
+      return { x: width, y: height };
+    },
+    setPosition: function (view, coordinates) {
+      const model = view.model;
+      model.set(
+        "size",
+        {
+          width: Math.max(coordinates.x, 1),
+          height: Math.max(coordinates.y, 1)
+        },
+        {
+          ui: true,
+          tool: this.cid
+        }
+      );
+    }
+  });
+
 function collapse(model) {
     const graph = model.graph
 
@@ -106,6 +128,12 @@ export const blockToolView = new dia.ToolsView({
     tools: [
         boundaryTool,
         removeButton,
+        new ResizeTool({
+            selector: "body",
+            handleAttributes: {
+              fill: "#4666E5"
+            }
+          })
     ]
 });
 
