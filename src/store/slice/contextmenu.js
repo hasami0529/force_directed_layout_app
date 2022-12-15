@@ -18,7 +18,6 @@ export const contextMenuSlice = createSlice({
 		state.show = false
 	},
 	showMenu: (state, action) => {
-		action.payload.event.preventDefault()
 		state.event = action.payload.event
 		state.show = true
 		state.menu = 'paper'

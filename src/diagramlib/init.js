@@ -19,7 +19,9 @@ export function init() {
         height: "100%",
         gridSize: 1,
         cellViewNamespace: namespace,
-        // linkPinning: false,
+
+        preventContextMenu: true,
+        preventDefaultBlankAction: true,
         highlighting: false,
         embeddingMode: true,
         defaultRouter: {
@@ -41,9 +43,21 @@ export function init() {
 export function initPaperEvents(paper, dispatch) {
 
     paper.on('blank:contextmenu', (evt, x, y) => {
+        // evt.stopPropagation()
+
         dispatch(
             contextMenuActions.showMenu({ event: evt })
         )
+    })
+
+    document.addEventListener('click', (event) => {
+        dispatch(
+            contextMenuActions.disable({event})
+        )
+    })
+
+    document.getElementById("canvas").addEventListener('contextmenu', (event) => {
+        event.preventDefault()
     })
 
     paper.on('element:pointerclick', (elementView) => {
@@ -73,11 +87,6 @@ export function initPaperEvents(paper, dispatch) {
 
     })
 
-    document.addEventListener('click', (event) => {
-        dispatch(
-            contextMenuActions.disable({event})
-        )
-    })
 
     paper.on('element:contextmenu', function(cellView, evt) {
         dispatch(
