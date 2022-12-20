@@ -1,5 +1,5 @@
 import { createNormalLink } from './shapes/link'
-import { createBlock } from './shapes/rect'
+import { createBlock, createBus } from './shapes/rect'
 
 export { addBlock, setLabel, addPort } from './factory'
 export { init, initPaperEvents } from './init'
@@ -7,7 +7,10 @@ export { init, initPaperEvents } from './init'
 export function demo(graph, paper) {
     const { rect: b1, elementView: v1 } = createBlock(paper, graph)
     const { rect: b2, elementView: v2 } = createBlock(paper, graph)
+    const { rect: b3, elementView: v3 } = createBus(paper, graph)
     b1.position(30,50)
+
+    b3.resize(40, 400)
 
     b1.addPort({
         group: 'right',
@@ -18,8 +21,6 @@ export function demo(graph, paper) {
         group: 'left',
         id: 'portB'
     })
-
-    console.log(b1.getPorts()[0].id)
 
     const link = createNormalLink()
     link.source(b1, {

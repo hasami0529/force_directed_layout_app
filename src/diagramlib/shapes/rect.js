@@ -44,6 +44,25 @@ const containerAttrs = {
     }
 }
 
+const BusAttrs = {
+    body: {
+        fill: '#9A7B4F', // be defined in css
+        class: 'block'
+    },
+    label: {
+        text: 'Bus',
+        fill: 'black'
+    },
+    ports: {
+        groups: {
+            'left': leftPort,
+            'right': rightPort,
+            'top': topPort,
+            'bottom': bottomPort,
+        },
+    }
+}
+
 
 
 export function createContainer(paper, graph) {
@@ -67,6 +86,21 @@ export function createBlock(paper, graph) {
     rect.role = 'Block'
     rect.position(100, 30);
     rect.resize(100, 40);
+    rect.addTo(graph)
+
+    var elementView = rect.findView(paper);
+    // elementView.addTools(blockToolView);
+    elementView.hideTools()
+    return { rect, elementView }
+}
+
+export function createBus(paper, graph) {
+
+    var rect = new shapes.standard.Rectangle(BusAttrs);
+    rect.attr(BusAttrs)
+    rect.role = 'Bus'
+    rect.position(100, 30);
+    rect.resize(100, 20);
     rect.addTo(graph)
 
     var elementView = rect.findView(paper);
