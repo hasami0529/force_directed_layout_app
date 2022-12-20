@@ -1,4 +1,4 @@
-import { highlighters, g, shapes, dia } from 'jointjs'
+import { highlighters, g, shapes, dia, anchors } from 'jointjs'
 import { createContainer } from './shapes/rect'
 import { blockToolView, expandedContainerToolsView, collapsedContainerToolsView } from './shapes/tools'
 import { normalLinkToolsView } from './shapes/linktool'
@@ -50,7 +50,54 @@ export function init() {
         },
         validateConnection: (cellViewS, magnetS, cellViewT, magnetT, end, linkView) => {
             if (magnetT && magnetT.getAttribute('role') === 'Port') return true
-        }
+        },
+        defaultAnchor: (view, magnet, ...rest) => {
+            const group = view.findAttribute("port-group", magnet);
+            let anchorFn;
+            console.log(group)
+            switch (group) {
+                case 'left':
+                    anchorFn = anchors.left
+                    break;
+                case 'right':
+                    anchorFn = anchors.right
+                    break;
+                case 'top':
+                    anchorFn = anchors.top
+                    break;
+                case 'bottom':
+                    anchorFn = anchors.bottom
+                    break;
+                default:
+                    break;
+            }
+            // const anchorFn = group === "in" ? anchors.left : anchors.right;
+            return anchorFn(view, magnet, ...rest);
+        },
+        defaultLinkAnchor: (view, magnet, ...rest) => {
+            const group = view.findAttribute("port-group", magnet);
+            let anchorFn;
+            console.log(group)
+            switch (group) {
+                case 'left':
+                    anchorFn = anchors.left
+                    break;
+                case 'right':
+                    anchorFn = anchors.right
+                    break;
+                case 'top':
+                    anchorFn = anchors.top
+                    break;
+                case 'bottom':
+                    anchorFn = anchors.bottom
+                    break;
+                default:
+                    break;
+            }
+            // const anchorFn = group === "in" ? anchors.left : anchors.right;
+            return anchorFn(view, magnet, ...rest);
+        },
+
     });
 
     return { graph, paper }
