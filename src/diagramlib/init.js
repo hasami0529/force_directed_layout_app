@@ -1,6 +1,7 @@
 import { highlighters, g, shapes, dia } from 'jointjs'
 import { createContainer } from './shapes/rect'
 import { blockToolView, expandedContainerToolsView, collapsedContainerToolsView } from './shapes/tools'
+import { normalLinkToolsView } from './shapes/linktool'
 import { createNormalLink } from './shapes/link'
 
 import { inspectActions } from '../store/slice/inspect'
@@ -29,7 +30,7 @@ export function init() {
         // connection related config
         snapLinks: true,
         linkPinning: false,
-        magnetThreshold: 'onleave',
+        // magnetThreshold: 'onleave',
         defaultRouter: {
             name: "orthogonal",
             args: {
@@ -39,6 +40,7 @@ export function init() {
         defaultLink: createNormalLink,
         // defaultAnchor: function name(params) {
         // },
+        // shouldn't be bbox
         defaultConnectionPoint: {
             name: 'bbox',
             args: {
@@ -173,6 +175,15 @@ export function initPaperEvents(paper, dispatch) {
     // WIP
     paper.on('slot:click', (e) => {
         console.log('slot focus')
+    })
+
+    paper.on('link:mouseenter', (linkView) => {
+        linkView.addTools(normalLinkToolsView)
+        // linkView.showTools()
+    })
+
+    paper.on('link:mouseleave', (linkView) => {
+        linkView.hideTools()
     })
 
 }
