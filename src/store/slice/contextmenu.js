@@ -6,6 +6,11 @@ export const contextMenuSlice = createSlice({
 	event: {pageX: 100, pageY: 100},
 	menu: 'default',
 	target: null,
+	expandedCoord: {
+		display: false,
+		x: 100,
+		y: 100
+	}
   },
   reducers: {
 	toggle: (state, action) => {
@@ -16,10 +21,12 @@ export const contextMenuSlice = createSlice({
 	disable: (state, action) => {
 		state.event = action.payload.event
 		state.show = false
+		state.expandedCoord.display = false
 	},
 	showMenu: (state, action) => {
 		state.event = action.payload.event
 		state.show = true
+		state.expandedCoord.display = false
 		state.menu = 'paper'
 	},
 	showBlockMenu: (state, action) => {
@@ -27,10 +34,22 @@ export const contextMenuSlice = createSlice({
 		evt.preventDefault()
 		state.event = evt
 		state.show = true
+		state.expandedCoord.display = false
 		state.menu = 'block'
-
 		state.target = target.model
-	}
+	},
+	setExpandedCoord: (state, action) => {
+		state.expandedCoord = action.payload
+	},
+	showBusMenu: (state, action) => {
+		const { evt, target } = action.payload
+		evt.preventDefault()
+		state.event = evt
+		state.show = true
+		state.expandedCoord.display = false
+		state.menu = 'bus'
+		state.target = target.model
+	},
   },
 });
 

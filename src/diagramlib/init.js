@@ -54,7 +54,6 @@ export function init() {
         defaultAnchor: (view, magnet, ...rest) => {
             const group = view.findAttribute("port-group", magnet);
             let anchorFn;
-            console.log(group)
             switch (group) {
                 case 'left':
                     anchorFn = anchors.left
@@ -124,37 +123,57 @@ export function initPaperEvents(paper, dispatch) {
     })
 
     paper.on('element:pointerclick', (elementView) => {
-        // console.log(highlighters.mask.get(elementView))
-        if (!highlighters.mask.get(elementView).length) {
-            highlighters.mask.add(elementView, { selector: 'root' }, 'my-element-highlight', {
-                deep: true,
-                attrs: {
-                    'stroke': '#F2CC0F',
-                    'stroke-width': 3
+        console.log(elementView.model.role)
+        switch (elementView.model.role) {
+            case 'Block':
+                if (!highlighters.mask.get(elementView).length) {
+                    highlighters.mask.add(elementView, { selector: 'root' }, 'my-element-highlight', {
+                        deep: true,
+                        attrs: {
+                            'stroke': '#F2CC0F',
+                            'stroke-width': 3
+                        }
+                    });
+        
+                    dispatch(
+                        canvasActions.setFocus({ model: elementView.model })
+                    )
+                    dispatch(
+                        showTags({elementId: elementView.id})
+                    )
+                    dispatch(
+                        inspectActions.showBlockInfo({ model: elementView.model })
+                    )
+                    
+                } else {
+                    highlighters.mask.remove(elementView);
                 }
-            });
-
-            dispatch(
-                canvasActions.setFocus({ model: elementView.model })
-            )
-            dispatch(
-                showTags({elementId: elementView.id})
-            )
-            dispatch(
-                inspectActions.showBlockInfo({ model: elementView.model })
-            )
-            
-        } else {
-            highlighters.mask.remove(elementView);
+                break;
+        
+            default:
+                break;
         }
+
 
     })
 
 
     paper.on('element:contextmenu', function(cellView, evt) {
-        dispatch(
-            contextMenuActions.showBlockMenu({ evt, target: cellView})
-        )
+        switch (cellView.model.role) {
+            case "Block":
+                dispatch(
+                    contextMenuActions.showBlockMenu({ evt, target: cellView})
+                )
+                break
+            case "Link:Bus":
+                dispatch(
+                    contextMenuActions.showBusMenu({ evt, target: cellView})
+                )
+                break
+            default:
+        }
+            
+
     })
 
     paper.on('element:mouseenter', function(elementView) {
@@ -222,6 +241,11 @@ export function initPaperEvents(paper, dispatch) {
     // WIP
     paper.on('slot:click', (e) => {
         console.log('slot focus')
+    })
+
+    paper.on('bus', function(cellView, evt) {
+        console.log('here')
+
     })
 
     paper.on('link:mouseenter', (linkView) => {

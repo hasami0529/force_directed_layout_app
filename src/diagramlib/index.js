@@ -1,7 +1,7 @@
 import { createNormalLink } from './shapes/link'
 import { createBlock, createBus } from './shapes/rect'
 
-export { addBlock, setLabel, addPort } from './factory'
+export { addBlock, setLabel, addPort, addSlot } from './factory'
 export { init, initPaperEvents } from './init'
 
 export function demo(graph, paper) {

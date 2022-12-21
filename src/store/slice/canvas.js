@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addBlock, init, demo, setLabel, initPaperEvents, addPort } from '../../diagramlib'
+import { addBlock, init, demo, setLabel, initPaperEvents, addPort, addSlot } from '../../diagramlib'
 
 export const canvasSlice = createSlice({
   name: "canvas",
@@ -34,6 +34,10 @@ export const canvasSlice = createSlice({
 	addPort: (state, action) => {
 		const { target, direction } = action.payload
 		addPort(target, direction)
+	},
+	addSlot: (state, action) => {
+		const { target, direction } = action.payload
+		addSlot(target, direction)
 	}
   },
 });

@@ -21,3 +21,12 @@ export function addPort(model, direction) {
         // attrs: { label: { text: 'in2' }}
     })
 }
+
+export function addSlot(model, direction) {
+    console.log(model)
+
+    model.addPort({
+        group: direction,
+        // attrs: { label: { text: 'in2' }}
+    })
+}

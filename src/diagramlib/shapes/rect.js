@@ -1,5 +1,6 @@
 import { shapes } from 'jointjs';
 import { leftPort, rightPort, topPort, bottomPort } from './ports'
+import { leftSlot, rightSlot } from './slot'
 
 
 const attrs = {
@@ -47,7 +48,7 @@ const containerAttrs = {
 const BusAttrs = {
     body: {
         fill: '#9A7B4F', // be defined in css
-        class: 'block'
+        class: 'block',
     },
     label: {
         text: 'Bus',
@@ -55,10 +56,8 @@ const BusAttrs = {
     },
     ports: {
         groups: {
-            'left': leftPort,
-            'right': rightPort,
-            'top': topPort,
-            'bottom': bottomPort,
+            'left': leftSlot,
+            'right': rightSlot,
         },
     }
 }
@@ -98,7 +97,7 @@ export function createBus(paper, graph) {
 
     var rect = new shapes.standard.Rectangle(BusAttrs);
     rect.attr(BusAttrs)
-    rect.role = 'Bus'
+    rect.role = 'Link:Bus'
     rect.position(100, 30);
     rect.resize(100, 20);
     rect.addTo(graph)
@@ -107,5 +106,4 @@ export function createBus(paper, graph) {
     // elementView.addTools(blockToolView);
     elementView.hideTools()
     return { rect, elementView }
-
 }
