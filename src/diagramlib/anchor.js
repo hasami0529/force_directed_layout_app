@@ -1,10 +1,6 @@
 
 export function customAnchor(direction, endView, endMagnet, anchorReference, args) {
-    // console.log(endView.model.getPort(endMagnet.getAttribute('port')))
     const { top, left, right, bottom, height, width } = endMagnet.getBoundingClientRect()
-    // console.log(top, right)
-    
-    // console.log(paper.clientToLocalPoint(right, top))
 
     switch (direction) {
         case 'left':

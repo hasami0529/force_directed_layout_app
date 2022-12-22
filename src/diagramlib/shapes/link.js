@@ -121,6 +121,7 @@ var bindingLink = dia.Link.define('bindingLink', {
 );
 
 export function createBindingLink(cellView, magnet){
+    console.log(cellView)
     return new bindingLink();
 }
 
