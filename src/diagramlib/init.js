@@ -38,7 +38,7 @@ export function init() {
                 padding: 10,
             }
         },
-        defaultLink: createBindingLink,
+        defaultLink: createNormalLink,
         // defaultAnchor: function name(params) {
         // },
         // shouldn't be bbox
@@ -50,7 +50,20 @@ export function init() {
             }
         },
         validateConnection: (cellViewS, magnetS, cellViewT, magnetT, end, linkView) => {
-            if (magnetT && magnetT.getAttribute('role') === 'Port') return true
+            if (magnetS.getAttribute('role') === 'Port' && magnetT?.getAttribute('role') === 'Port') return true
+            if ((magnetS.getAttribute('role') === 'Slot' && magnetT?.getAttribute('role') === 'Port') |
+            (magnetS.getAttribute('role') === 'Port' && magnetT?.getAttribute('role') === 'Slot')) {
+                const l = createBindingLink()
+                l.source(cellViewS.model, {
+                    port: magnetS.getAttribute('port')
+                })
+                l.target(cellViewT.model, {
+                    port: magnetT.getAttribute('port')
+                })
+                l.addTo(cellViewS.model.graph)
+                linkView.remove()
+                return true
+            }
         },
         defaultAnchor: (view, magnet, _, args) => {
             const group = view.findAttribute("port-group", magnet);
