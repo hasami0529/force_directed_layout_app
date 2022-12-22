@@ -2,7 +2,8 @@ import { highlighters, g, shapes, dia, anchors } from 'jointjs'
 import { createContainer } from './shapes/rect'
 import { blockToolView, expandedContainerToolsView, collapsedContainerToolsView } from './shapes/tools'
 import { normalLinkToolsView } from './shapes/linktool'
-import { createNormalLink } from './shapes/link'
+import { createNormalLink, createBindingLink } from './shapes/link'
+import { customAnchor } from './anchor'
 
 import { inspectActions } from '../store/slice/inspect'
 import { contextMenuActions } from '../store/slice/contextmenu'
@@ -32,46 +33,28 @@ export function init() {
         linkPinning: false,
         // magnetThreshold: 'onleave',
         defaultRouter: {
-            name: "orthogonal",
+            name: "manhattan",
             args: {
                 padding: 10,
             }
         },
-        defaultLink: createNormalLink,
+        defaultLink: createBindingLink,
         // defaultAnchor: function name(params) {
         // },
         // shouldn't be bbox
         defaultConnectionPoint: {
-            name: 'bbox',
+            name: 'anchor',
             args: {
-                offset: 5,
-                stroke: true,
+                // offset: 10,
+                // stroke: true,
             }
         },
         validateConnection: (cellViewS, magnetS, cellViewT, magnetT, end, linkView) => {
             if (magnetT && magnetT.getAttribute('role') === 'Port') return true
         },
-        defaultAnchor: (view, magnet, ...rest) => {
+        defaultAnchor: (view, magnet, _, args) => {
             const group = view.findAttribute("port-group", magnet);
-            let anchorFn;
-            switch (group) {
-                case 'left':
-                    anchorFn = anchors.left
-                    break;
-                case 'right':
-                    anchorFn = anchors.right
-                    break;
-                case 'top':
-                    anchorFn = anchors.top
-                    break;
-                case 'bottom':
-                    anchorFn = anchors.bottom
-                    break;
-                default:
-                    break;
-            }
-            // const anchorFn = group === "in" ? anchors.left : anchors.right;
-            return anchorFn(view, magnet, ...rest);
+            return customAnchor(group, view, magnet, _, args)
         },
         defaultLinkAnchor: (view, magnet, ...rest) => {
             const group = view.findAttribute("port-group", magnet);
