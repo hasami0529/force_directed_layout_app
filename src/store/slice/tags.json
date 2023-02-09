@@ -1,0 +1,122 @@
+{
+    "tags": [
+        {
+            "name": "component",
+            "info": "",
+            "children": [
+                {
+                    "name": "sensor",
+                    "info": "",
+                    "children": [
+                        {
+                            "name": "gyro",
+                            "ancestor": "sensor",
+                            "info": ""
+                        },
+                        {
+                            "name": "accelerator",
+                            "ancestor": "sensor",
+                            "info": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "CPU",
+                    "ancestor": "component",
+                    "info": ""
+                },
+                {
+                    "name": "ADC",
+                    "ancestor": "component",
+                    "info": ""
+                },
+                {
+                    "name": "speaker",
+                    "ancestor": "component",
+                    "info": ""
+                }
+            ]
+        },
+        {
+            "name": "abstract",
+            "info": "",
+            "children": [
+                {
+                    "name": "power_supply",
+                    "category": "abstract",
+                    "info": ""
+                },
+                {
+                    "name": "data_storage",
+                    "ancestor": "abstract",
+                    "category": "abstract",
+                    "info": ""
+                }
+            ]
+        },
+        {
+            "name": "layout",
+            "info": "",
+            "children": [
+                {
+                    "name": "position",
+                    "category": "layout",
+                    "taggable": false,
+                    "children": [
+                        {
+                            "name": "leftside",
+                            "ancestor": "position",
+                            "category": "layout",
+                            "info": ""
+                        },
+                        {
+                            "name": "rightside",
+                            "ancestor": "position",
+                            "category": "layout",
+                            "info": ""
+                        },
+                        {
+                            "name": "downside",
+                            "ancestor": "position",
+                            "category": "layout",
+                            "info": ""
+                        },
+                        {
+                            "name": "center",
+                            "ancestor": "position",
+                            "category": "layout",
+                            "info": ""
+                        },
+                        {
+                            "name": "upside",
+                            "ancestor": "position",
+                            "category": "layout",
+                            "info": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "size",
+                    "ancestor": "",
+                    "category": "layout",
+                    "info": "",
+                    "taggable": false,
+                    "children": [
+                        {
+                            "name": "small",
+                            "ancestor": "size",
+                            "category": "layout",
+                            "info": ""
+                        },
+                        {
+                            "name": "big",
+                            "ancestor": "size",
+                            "category": "layout",
+                            "info": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

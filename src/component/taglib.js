@@ -1,25 +1,19 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectTaglib } from "../store/slice/taglib";
-import { selectCanvas } from "../store/slice/canvas";
+import { selectTaglib, taglibActions } from "../store/slice/taglib";
+import CheckboxTree from 'react-checkbox-tree';
 
 // for tabs
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-// import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TagIcon from '@mui/icons-material/Tag';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 
-// for Tree View
-// import TreeView from '@mui/lab/TreeView';
-// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-// import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import TreeItem from '@mui/lab/TreeItem';
-
-function TabPanel(props) {
+function Tags(props) {
   const { value, index,  } = props;
   const states = useSelector(selectTaglib);
+  const dispatch = useDispatch()
 
   return (
     <div
@@ -28,40 +22,18 @@ function TabPanel(props) {
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
     >
-      <Box sx ={{ padding: "15px", width: "100%"}}>
-        {/* {console.log(states.tags)} */}
-        {states.tags.map((i) => (
-          <div class='form-check' type="checkbox" value="" >      
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></input>
-            <label class="form-check-label" for="flexCheckDefault">
-              {i}
-            </label>
-          </div>
-        ))}
-      </Box>
+        <CheckboxTree
+                nodes={states.tags['allTags']}
+                checked={states.tags['checked']}
+                expanded={states.tags['expanded']}
+                onCheck={ (checked, target) => dispatch(taglibActions.check(checked)) }
+                onExpand={ (expanded, target) => { dispatch(taglibActions.expand(expanded))}}
+                noCascade={true}
+                showExpandAll={true}
+            />
+
     </div>
   );
-}
-
-function BlockGraph() {
-  const states = useSelector(selectTaglib);
-  return (
-    <TabPanel >
-    coming soon
-      <TreeItem nodeId="1" label="Blocks">
-        { console.log(states.elements)}
-        { states.elements.map(
-          (el) => {
-            if (el.role === 'Block')
-              return (
-                <TreeItem label={el.attributes.attrs.label.text} />
-              )
-            }
-          )
-        }
-      </TreeItem>
-    </TabPanel>
-  )
 }
 
 function a11yProps(index) {
@@ -94,10 +66,8 @@ export function Taglib() {
         <Tab icon={<AccountTreeOutlinedIcon />} aria-label="tree" label="tree" {...a11yProps(1)} />
       </Tabs>
 
-      <TabPanel value={value} index={0}>
-      </TabPanel>
+      <Tags value={value} index={0}></Tags>
 
-      {/* <BlockGraph></BlockGraph> */}
     </Box>
   );
 }

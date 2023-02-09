@@ -7,7 +7,7 @@ import { customAnchor } from './anchor'
 
 import { inspectActions } from '../store/slice/inspect'
 import { contextMenuActions } from '../store/slice/contextmenu'
-import { showTags } from '../store/slice/taglib';
+import { taglibActions } from '../store/slice/taglib';
 import { canvasActions } from '../store/slice/canvas';
 
 export function init() {
@@ -135,7 +135,7 @@ export function initPaperEvents(paper, dispatch) {
                         canvasActions.setFocus({ model: elementView.model })
                     )
                     dispatch(
-                        showTags({elementId: elementView.id})
+                        taglibActions.showTags({elementId: elementView.id})
                     )
                     dispatch(
                         inspectActions.showBlockInfo({ model: elementView.model })
