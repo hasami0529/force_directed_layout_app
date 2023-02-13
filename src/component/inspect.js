@@ -76,8 +76,6 @@ function EditableField(props) {
 
 }
 
-
-
 function InfoTable(){
 
   const states = useSelector(selectInspect)

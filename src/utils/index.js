@@ -14,14 +14,21 @@ function getLabel(model) {
       return model.attributes.attrs.label.text
       // if use model.attributes.label.text will get the result before editting (VIEW version)
     }
-  }
-  
+}
+
+export function setLabel(model, label) {
+    model.attributes.attrs.label.text = label
+    return model
+}
+
+
 export function modelToInfo(model) {
     if (model instanceof dia.Element){
         return {
-        id: model.id,
-        role: model.role,
-        label: getLabel(model)
+            id: model.id,
+            role: model.role,
+            label: getLabel(model),
+            tags: "{#" +　model.tags.join(' #') + "}"
         }
     }
 }
