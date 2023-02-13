@@ -78,19 +78,16 @@ export function createContainer(paper, graph) {
     return { container, elementView }
 }
 
-export function createBlock(paper, graph) {
+export function createBlock() {
 
     var rect = new shapes.standard.Rectangle(attrs);
     rect.attr(attrs)
     rect.role = 'Block'
     rect.position(100, 30);
     rect.resize(100, 40);
-    rect.addTo(graph)
+    // rect.addTo(graph) // shouldn't be here
 
-    var elementView = rect.findView(paper);
-    // elementView.addTools(blockToolView);
-    elementView.hideTools()
-    return { rect, elementView }
+    return { rect }
 }
 
 export function createBus(paper, graph) {
