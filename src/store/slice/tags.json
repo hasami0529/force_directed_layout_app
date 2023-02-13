@@ -3,6 +3,7 @@
         {
             "name": "component",
             "info": "",
+            "taggable": false,
             "children": [
                 {
                     "name": "sensor",
@@ -40,6 +41,7 @@
         {
             "name": "abstract",
             "info": "",
+            "taggable": false,
             "children": [
                 {
                     "name": "power_supply",
@@ -57,6 +59,7 @@
         {
             "name": "layout",
             "info": "",
+            "taggable": false,
             "children": [
                 {
                     "name": "position",
