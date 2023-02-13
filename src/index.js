@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import 'react-checkbox-tree/lib/react-checkbox-tree.css';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
