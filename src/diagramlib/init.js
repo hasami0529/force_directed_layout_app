@@ -10,6 +10,8 @@ import { contextMenuActions } from '../store/slice/contextmenu'
 import { showTags } from '../store/slice/taglib';
 import { canvasActions } from '../store/slice/canvas';
 
+import { PAPERHIEGHT, PAPERWIDTH } from './config'
+
 export function init() {
     var namespace = shapes;
     var graph = new dia.Graph({}, { cellNamespace: namespace });
@@ -17,12 +19,13 @@ export function init() {
     var paper = new dia.Paper({
         el: document.getElementById("canvas"),
         model: graph,
-        width: "100%",
-        height: "100%",
+        width: PAPERWIDTH,
+        height: PAPERHIEGHT,
         gridSize: 1,
         cellViewNamespace: namespace,
         preventContextMenu: true,
         preventDefaultBlankAction: true,
+        restrictTranslate: true,
 
 
         highlighting: false,
@@ -92,6 +95,10 @@ export function init() {
             // const anchorFn = group === "in" ? anchors.left : anchors.right;
             return anchorFn(view, magnet, ...rest);
         },
+        interactive: (cellView, method) => {
+            if (cellView.model.attributes.type === 'sectionDivider') return false
+            return true
+        }
 
     });
 
@@ -245,8 +252,10 @@ export function initPaperEvents(paper, dispatch) {
     })
 
     paper.on('link:mouseenter', (linkView) => {
-        linkView.addTools(normalLinkToolsView)
-        // linkView.showTools()
+        if (!linkView.model.attributes.type === 'sectionDivider') {
+            console.log(linkView)
+            linkView.addTools(normalLinkToolsView)
+        }
     })
 
     paper.on('link:mouseleave', (linkView) => {
