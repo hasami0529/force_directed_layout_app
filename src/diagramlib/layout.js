@@ -1,8 +1,9 @@
 import { GRID, PAPERHIEGHT as h, PAPERWIDTH as w } from './config'
+import { shapes } from 'jointjs'
 
-export function idealLayout(paper, graph, blocks) {
+export function idealLayout(paper, graph, blocks, GRID) {
     const [mcu, dac, speaker] = blocks
-    const sections = getSections(blocks)
+    const sections = getSections(GRID)
 
 
     mcu.resize(50,50)
@@ -29,11 +30,52 @@ function localLayout(blocks, section) {
     // alignment
 }
 
-function getSections(params) {
+export function drawSections(graph, GRID) {
+    console.log(GRID)
+
+    const sectionDivider = shapes.standard.Link.define('sectionDivider', {
+        attrs: {
+            line: {
+                opacity: "20%",
+                strokeDasharray: "2 5",
+            }}
+        });
+    
+    const leftLine = new sectionDivider() // left
+    leftLine.router({
+        name: "normal"
+    })
+
+    const rightLine = leftLine.clone() // right
+    const topLine = leftLine.clone() // top
+    const bottomLine = leftLine.clone() // bottom
+
+
+
+
+    // console.log(leftLine)
+
+    leftLine.source({ x: GRID.a, y: 0})
+    leftLine.target({ x: GRID.a, y: h})
+
+    rightLine.source({ x: w-GRID.b, y: 0})
+    rightLine.target({ x: w-GRID.b, y: h})
+
+    topLine.source({ x: 0, y: GRID.c})
+    topLine.target({ x: w, y: GRID.c})
+
+    bottomLine.source({ x: 0, y: h-GRID.d})
+    bottomLine.target({ x: w, y: h-GRID.d})
+
+
+    graph.addCells(leftLine, rightLine, topLine, bottomLine)
+}
+
+function getSections(gridOptions) {
 
     //algo that decide grid paramters (a, b, c, d)
 
-    const { a, b, c, d } = GRID
+    const { a, b, c, d } = gridOptions
     
     let sections = {
 

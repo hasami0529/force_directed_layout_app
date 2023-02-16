@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { addBlock, init, demo, setLabel, initPaperEvents, addPort, addSlot } from '../../diagramlib'
+import { drawSections, idealLayout } from '../../diagramlib/layout';
 
 export const canvasSlice = createSlice({
   name: "canvas",
@@ -8,6 +9,7 @@ export const canvasSlice = createSlice({
 	  graph: null,
 	  init: false,
 	  focus: null,
+	  blocks: [] // for demo
   },
   reducers: {
 	initPaper: (state, action) => {
@@ -16,7 +18,7 @@ export const canvasSlice = createSlice({
 			state.graph = graph
 			state.paper = paper
 			initPaperEvents(paper, action.payload.dispatch)
-			demo(state.graph, state.paper)
+			state.blocks = demo(state.graph, state.paper)
 			state.init = true
 		}
 	},
@@ -38,6 +40,11 @@ export const canvasSlice = createSlice({
 	addSlot: (state, action) => {
 		const { target, direction } = action.payload
 		addSlot(target, direction)
+	},
+	setLayoutMap: (state, action) => {
+		const gridOptions = action.payload
+		drawSections(state.graph, gridOptions)
+		idealLayout(state.graph, state.paper, state.blocks, gridOptions)
 	}
   },
 });

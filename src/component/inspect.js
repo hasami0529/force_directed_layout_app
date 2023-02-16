@@ -16,9 +16,19 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Button from '@mui/material/Button';
 
 import EditIcon from '@mui/icons-material/Edit';
 import { useState } from 'react';
+
+
+
+import Box from '@mui/material/Box';
+import Input from '@mui/material/Input';
+
+import { GRID, PAPERHIEGHT, PAPERWIDTH } from '../diagramlib/config';
+
+
 
 const EDITABLE = ['label']
 
@@ -76,11 +86,73 @@ function EditableField(props) {
 
 }
 
+function GridSlider(props) {
+  return (
+    <div>
+      <Typography id="input-slider" gutterBottom>
+        {props.title}
+      </Typography>
+        <Input
+          width="42px"
+          value={props.gridOptions[props.title]}
+          size="small"
+          onChange={(e) => { props.handleInputChange(e, props.title)}}
+          // onBlur={handleBlur}
+          inputProps={{
+            step: 1,
+            min: props.min,
+            max: props.max,
+            type: 'number',
+            'aria-labelledby': 'input-slider',
+          }}
+          ></Input>
+    </div>
+  )
+}
+
+function Layout() {
+  const [gridOptions, setGirdOptions] = useState({
+    a: GRID.a,
+    b: GRID.b,
+    c: GRID.c,
+    d: GRID.d
+  });
+
+  const dispatch = useDispatch()
+
+  const handleInputChange = (event, target) => {
+    let v = { ...gridOptions }
+    v[target] = event.target.value === '' ? v[target] : Number(event.target.value)
+    setGirdOptions(v);
+  };
+
+  // const handleBlur = () => {
+  //   if (value < 0) {
+  //     setValue(0);
+  //   } else if (value > 100) {
+  //     setValue(100);
+  //   }
+  // };
+
+  return (
+    <Box sx={{ width: 250 }}>
+      <GridSlider title="a" min={50} max={PAPERWIDTH-50} gridOptions={gridOptions} handleInputChange={handleInputChange}></GridSlider>
+      <GridSlider title="b" min={50} max={PAPERWIDTH-50} gridOptions={gridOptions} handleInputChange={handleInputChange}></GridSlider>
+      <GridSlider title="c" min={50} max={PAPERHIEGHT-50} gridOptions={gridOptions} handleInputChange={handleInputChange}></GridSlider>
+      <GridSlider title="d" min={50} max={PAPERHIEGHT-50} gridOptions={gridOptions} handleInputChange={handleInputChange}></GridSlider>
+      <Button variant="outlined" onClick={() => {dispatch(canvasActions.setLayoutMap(gridOptions))}}>Apply</Button>
+    </Box>
+
+
+
+
+
+  )
+}
+
 function InfoTable(){
 
   const states = useSelector(selectInspect)
-
-
   return (
     <TableContainer component={Paper}>
     <Table  aria-label="simple table">
@@ -116,6 +188,19 @@ export function Inspect() {
         </AccordionSummary>
         <AccordionDetails>
           <InfoTable></InfoTable>
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion defaultExpanded="true">
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography>Layout</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Layout></Layout>
         </AccordionDetails>
       </Accordion>
 
