@@ -1,5 +1,7 @@
 import { GRID, PAPERHIEGHT as h, PAPERWIDTH as w } from './config'
-import { shapes } from 'jointjs'
+import { shapes, g } from 'jointjs'
+import { Vector } from 'matter-js'
+import { Construction } from '@mui/icons-material'
 
 export function idealLayout(paper, graph, blocks, GRID) {
     const [mcu, dac, speaker] = blocks
@@ -19,19 +21,37 @@ function offset(p1, p2) {
     }
 }
 
-export function layout(paper, graph, blocks) {
+export function layout(blocks, gridOptions) {
     // define sections
+
+    const nodes = blocks.map((b) => new Node(b))
+
+    // classify blocks by tags
+
+    const sections = getSections(gridOptions)
+    localLayout(nodes, sections.CC, gridOptions)
 
 }
 
-// function getLayout
+function localLayout(nodes, section, _) {
 
-function localLayout(blocks, section) {
-    // alignment
+    const [ver, hoz] =  Line.genLines(section)
+    const sections = getSections(_)
+    const [ver1, hoz1] = Line.genLines(sections.TR)
+    nodes.push(hoz, hoz1)
+
+    directedForce(nodes, {
+        i: 1,
+        k: 0.0001,
+        h: 0.05,
+        l: 150,
+        p: 1,
+        c: 0
+    })
+
 }
 
 export function drawSections(graph, GRID) {
-    console.log(GRID)
 
     const sectionDivider = shapes.standard.Link.define('sectionDivider', {
         attrs: {
@@ -49,9 +69,6 @@ export function drawSections(graph, GRID) {
     const rightLine = leftLine.clone() // right
     const topLine = leftLine.clone() // top
     const bottomLine = leftLine.clone() // bottom
-
-
-
 
     // console.log(leftLine)
 
@@ -104,6 +121,71 @@ function getSections(gridOptions) {
 
 }
 
+class Node {
+
+    constructor(model, y) {
+        if (y === undefined) {
+            this.model = model
+            this.bbox = model.getBBox()
+        } else {
+            this.bbox = { x: model, y: y } // model parameter is used as x 
+        }
+
+    }
+
+    get x() {
+        return this.bbox.x
+    }
+
+    get y() {
+        return this.bbox.y
+    }
+
+    get center() {
+        if (this.model) {
+            return this.bbox.center()
+        } else {
+            return this.bbox
+        }
+
+    }
+
+    get area() {
+        return this.bbox.height * this.bbox.width
+    }
+
+    translate(dx, dy) {
+        // restore the momentum for move function
+        this.dx = dx
+        this.dy = dy
+    }
+
+    move() {
+        this.model.translate(this.dx, this.dy)
+    }
+}
+
+class Line {
+
+    constructor(xy) {
+        const { x, y } = xy
+        this.x = x
+        this.y = y
+    }
+
+    getProjectionPoint(node) {
+        if (this.x) {
+            return new Node(this.x, node.y)
+        } else {
+            return new Node(node.x, this.y)
+        }
+    }
+
+    static genLines(section) {
+        return [new Line({ x: section.origin.x}), new Line({ y: section.origin.y })]
+    }
+}
+
 class Section {
     constructor(x, y, width, height) {
         this.origin = {
@@ -135,4 +217,81 @@ class Section {
             y: this.origin.y + this.height/2
         }
     }
+}
+
+function directedForce(nodes, params) {
+
+    // i - interations
+    // k - Coulomb's law constant
+    // h - Hooke's law constant
+    // l - edge spring length
+    // p - padding spring length
+    const { i, k, h, l, p, c } = params
+
+    function distance(n, m) {
+        return Math.sqrt((Math.pow(n.center.x - m.center.x, 2) + Math.pow(n.center.y - m.center.y, 2)))
+    }
+
+    function direction(n, m) {
+        return Vector.create(m.center.x - n.center.x, m.center.y - n.center.y)
+    }
+
+    function attr(n, m, springLength) {
+        // attractive force by Hooke's law
+        let force = h * (distance(n,m) - springLength)
+        console.log("Hooke", force)
+        let directionVector = direction(n, m)
+
+        return Vector.mult(Vector.normalise(directionVector), force)
+
+    }
+
+    function rep(n, m) {
+        // repulsive force applied by Coulomb's law
+        let force = k * n.area * m.area / distance(m, n)
+        let directionVector = direction(m, n)
+        return Vector.mult(Vector.normalise(directionVector), force)
+    }
+    
+    // repeat
+    for (let iter=0; iter < i; iter++) {
+        for (let n of nodes) {
+            let f = Vector.create(0,0)
+    
+            if (n instanceof Node) {
+                console.log("lable", n.model)
+                for (let m of nodes) {
+                    if (n === m) continue
+                    if (m instanceof Line) {
+                        console.log("Node", n)
+                        console.log("line", m)
+                        m = m.getProjectionPoint(n)
+                        console.log("pp", m)
+                        f = Vector.add(f, attr(n, m, p)) // if m is a line, ignore the replusive force
+                    } else {
+                        console.log(m)
+                        f = Vector.add(f, attr(n, m, l))
+                        const r = Vector.mult(Vector.add(f, rep(n, m)), Math.pow(c, i))
+                        f = Vector.add(f, r)
+                    }
+        
+    
+                    // console.log(attr(n, m))
+        
+                }
+                // console.log(f)
+                n.translate(f.x, f.y)
+            }
+    
+        }
+    
+        // render
+        nodes.forEach(node => {
+            if (node instanceof Node) {
+                node.move()
+            }
+        });
+
+    }
+
 }
