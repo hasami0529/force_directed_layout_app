@@ -61,7 +61,7 @@ function localLayout(nodes, section) {
     
         directedForce(nodes, section, {
             i: 10,
-            k: 0.0001,
+            k: 0.0002,
             h: 0.01,
             l: 50,
             p: 0,
@@ -202,9 +202,7 @@ class Line {
     }
 
     getProjectionPoint(node) {
-        console.log("node", node.x, node.y)
         if (this.x) {
-            console.log(this.x, node.center.y)
             return new Node(this.x, node.center.y)
         } else {
             return new Node(node.center.x, this.y)
@@ -295,7 +293,6 @@ function directedForce(nodes, section, params) {
         // attractive force by Hooke's law
         let force = h * (distance(n,m) - springLength)
         let directionVector = direction(n, m)
-        console.log('n m', n ,m)
 
         return Vector.mult(Vector.normalise(directionVector), force)
 
@@ -318,20 +315,18 @@ function directedForce(nodes, section, params) {
                     if (n === m) continue
                     if (m instanceof Line) {
                         m = m.getProjectionPoint(n)
-                        console.log('Line force', attr(n, m, p))
+                        // console.log('Line force', attr(n, m, p))
                         f = Vector.add(f, attr(n, m, p)) // if m is a line, ignore the replusive force
                     } else {
-                        f = Vector.add(f, attr(n, m, l))
+                        const length = k * n.area * m.area / distance(m, n)
+                        console.log('lenght', length)
+                        f = Vector.add(f, attr(n, m, length))
                         // const r = Vector.mult(Vector.add(f, rep(n, m)), Math.pow(c, i))
                         // f = Vector.add(f, r)
                     }
-        
-    
-                    // console.log(attr(n, m))
-        
                 }
-                console.log(n.model.id)
-                console.log('force', f)
+                // console.log(n.model.id)
+                // console.log('force', f)
                 n.translate(f.x, f.y)
             }
     
