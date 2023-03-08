@@ -29,7 +29,7 @@ export function init() {
 
 
         highlighting: false,
-        embeddingMode: true,
+        embeddingMode: false,
 
         // connection related config
         snapLinks: true,
@@ -46,7 +46,7 @@ export function init() {
         // },
         // shouldn't be bbox
         defaultConnectionPoint: {
-            name: 'anchor',
+            name: 'boundary',
             args: {
                 // offset: 10,
                 // stroke: true,
@@ -68,33 +68,33 @@ export function init() {
                 return true
             }
         },
-        defaultAnchor: (view, magnet, _, args) => {
-            const group = view.findAttribute("port-group", magnet);
-            return customAnchor(group, view, magnet, _, args)
-        },
-        defaultLinkAnchor: (view, magnet, ...rest) => {
-            const group = view.findAttribute("port-group", magnet);
-            let anchorFn;
-            console.log(group)
-            switch (group) {
-                case 'left':
-                    anchorFn = anchors.left
-                    break;
-                case 'right':
-                    anchorFn = anchors.right
-                    break;
-                case 'top':
-                    anchorFn = anchors.top
-                    break;
-                case 'bottom':
-                    anchorFn = anchors.bottom
-                    break;
-                default:
-                    break;
-            }
-            // const anchorFn = group === "in" ? anchors.left : anchors.right;
-            return anchorFn(view, magnet, ...rest);
-        },
+        // defaultAnchor: (view, magnet, _, args) => {
+        //     const group = view.findAttribute("port-group", magnet);
+        //     return customAnchor(group, view, magnet, _, args)
+        // },
+        // defaultLinkAnchor: (view, magnet, ...rest) => {
+        //     const group = view.findAttribute("port-group", magnet);
+        //     let anchorFn;
+        //     console.log(group)
+        //     switch (group) {
+        //         case 'left':
+        //             anchorFn = anchors.left
+        //             break;
+        //         case 'right':
+        //             anchorFn = anchors.right
+        //             break;
+        //         case 'top':
+        //             anchorFn = anchors.top
+        //             break;
+        //         case 'bottom':
+        //             anchorFn = anchors.bottom
+        //             break;
+        //         default:
+        //             break;
+        //     }
+        //     // const anchorFn = group === "in" ? anchors.left : anchors.right;
+        //     return anchorFn(view, magnet, ...rest);
+        // },
         interactive: (cellView, method) => {
             if (cellView.model.attributes.type === 'sectionDivider') return false
             return true
