@@ -7,7 +7,6 @@ export class Node {
         } else {
             this.bbox = { x: model, y: y } // model parameter is used as x 
         }
-
     }
 
     get x() {
@@ -37,13 +36,9 @@ export class Node {
         this.dy = dy
     }
 
-    move(section) {
-        // console.log('trans', this.dx, this.dy)
-        // console.log('cood', this.center)
-        // console.log('In', section.In({ x: this.center.x + this.dx, y: this.center.y + this.dy }))
-        if (section.In({ x: this.center.x + this.dx, y: this.center.y + this.dy })) {
-            this.model.translate(this.dx, this.dy)
-        }
+    move() {
+        this.model.translate(this.dx, this.dy)
+        this.bbox = this.model.getBBox()
     }
 }
 
@@ -66,4 +61,62 @@ export class Line {
     // static genLines(section) {
     //     return [new Line({ x: section.origin.x}), new Line({ y: section.origin.y })]
     // }
+}
+
+export class Section {
+    constructor(x, y, width, height) {
+        this.origin = {
+            x: x,
+            y: y,
+        }
+        this.width = width
+        this.height = height
+    }
+
+    get bottomRight() {
+        return { x: this.topLeft.x + this.width, y: this.topLeft.y + this.height}
+    }
+
+    get topLeft() {
+        return this.origin
+    }
+
+    // get bottomLeft() {
+    // }
+
+    // get topRight() {
+    // }
+
+    get center() {
+        return {
+            x: this.origin.x + this.width/2,
+            y: this.origin.y + this.height/2
+        }
+    }
+
+    get horizontalCentralLine() {
+        return new Line({y: this.center.y})
+    }
+
+    get verticalCentralLine() {
+        return new Line({x: this.center.x})
+    }
+
+    In(node) {
+        if (node instanceof Node) {
+            const { x, y } = node.center
+            if (x >= this.topLeft.x && x <= this.bottomRight.x
+                    && y >= this.topLeft.y && y <= this.bottomRight.y) {
+                        return true
+                    }
+        } else {
+            const { x, y } = node // { x,y } format
+            if (x >= this.topLeft.x && x <= this.bottomRight.x
+                && y >= this.topLeft.y && y <= this.bottomRight.y) {
+                    return true
+                }
+        }
+
+        return false
+    }
 }
