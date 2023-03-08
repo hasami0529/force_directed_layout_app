@@ -9,7 +9,8 @@ export const canvasSlice = createSlice({
 	  graph: null,
 	  init: false,
 	  focus: null,
-	  blocks: new Array() // for demo
+	  blocks: new Array(), // for demo,
+	  sectionsAreDrawn: false
   },
   reducers: {
 	initPaper: (state, action) => {
@@ -43,10 +44,11 @@ export const canvasSlice = createSlice({
 	},
 	setLayoutMap: (state, action) => {
 		const gridOptions = action.payload
-		drawSections(state.graph, gridOptions)
+		if (!state.sectionsAreDrawn){
+			drawSections(state.graph, gridOptions)
+			state.sectionsAreDrawn = true
+		}
 
-		// idealLayout(state.graph, state.paper, state.blocks, gridOptions)
-		console.log(Array.isArray(state.blocks))
 		layout(state.blocks, gridOptions)
 	}
   },
