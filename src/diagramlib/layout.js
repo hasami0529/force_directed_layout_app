@@ -1,24 +1,7 @@
 import { GRID, PAPERHIEGHT as h, PAPERWIDTH as w } from './config'
 import { shapes, g } from 'jointjs'
 import { Vector } from 'matter-js'
-
-export function idealLayout(paper, graph, blocks, GRID) {
-    const [mcu, dac, speaker] = blocks
-    const sections = getSections(GRID)
-
-
-    mcu.resize(50,50)
-    mcu.scale(5,5, mcu.getBBox().center())
-    let d = offset(sections.CC.center, mcu.getBBox().center())
-    mcu.translate(d.tx, d.ty)
-}
-
-function offset(p1, p2) {
-    return {
-        tx: p1.x - p2.x,
-        ty: p1.y - p2.y,
-    }
-}
+import { Line, Node } from './geometry'
 
 export function layout(blocks, gridOptions) {
 
@@ -44,13 +27,6 @@ export function layout(blocks, gridOptions) {
     Object.keys(blocksMap).forEach((m) => {
         localLayout(blocksMap[m], sections[m])
     })
-
-
-    // classify blocks by tags
-
-
-    // localLayout(nodes, sections.CC, gridOptions)
-
 }
 
 function localLayout(nodes, section) {
@@ -69,9 +45,6 @@ function localLayout(nodes, section) {
             s: 0.05 // over this tranlation volume will be igmored
         })
     }
-
-  
-
 }
 
 export function drawSections(graph, GRID) {
@@ -144,75 +117,6 @@ function getSections(gridOptions) {
 
 }
 
-class Node {
-
-    constructor(model, y) {
-        if (y === undefined) {
-            this.model = model
-            this.bbox = model.getBBox()
-        } else {
-            this.bbox = { x: model, y: y } // model parameter is used as x 
-        }
-
-    }
-
-    get x() {
-        return this.bbox.x
-    }
-
-    get y() {
-        return this.bbox.y
-    }
-
-    get center() {
-        if (this.model) {
-            return this.bbox.center()
-        } else {
-            return this.bbox
-        }
-
-    }
-
-    get area() {
-        return this.bbox.height * this.bbox.width
-    }
-
-    translate(dx, dy) {
-        // restore the momentum for move function
-        this.dx = dx
-        this.dy = dy
-    }
-
-    move(section) {
-        // console.log('trans', this.dx, this.dy)
-        // console.log('cood', this.center)
-        // console.log('In', section.In({ x: this.center.x + this.dx, y: this.center.y + this.dy }))
-        if (section.In({ x: this.center.x + this.dx, y: this.center.y + this.dy })) {
-            this.model.translate(this.dx, this.dy)
-        }
-    }
-}
-
-class Line {
-
-    constructor(xy) {
-        const { x, y } = xy
-        this.x = x
-        this.y = y
-    }
-
-    getProjectionPoint(node) {
-        if (this.x) {
-            return new Node(this.x, node.center.y)
-        } else {
-            return new Node(node.center.x, this.y)
-        }
-    }
-
-    // static genLines(section) {
-    //     return [new Line({ x: section.origin.x}), new Line({ y: section.origin.y })]
-    // }
-}
 
 class Section {
     constructor(x, y, width, height) {
