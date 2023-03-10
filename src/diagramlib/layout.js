@@ -1,50 +1,71 @@
-import { GRID, PAPERHIEGHT as h, PAPERWIDTH as w } from './config'
+import { GRID, PAPERHIEGHT as h, PAPERWIDTH as w, RECTANGLE_THRESHOLD } from './config'
 import { shapes, g } from 'jointjs'
 import { Vector } from 'matter-js'
-import { Line, Node } from './geometry'
+import { Line, Node, Section } from './geometry'
 
-export function layout(blocks, gridOptions) {
+// export function layout(blocks, gridOptions) {
 
-    const sections = getSections(gridOptions)
-    let activeSections = [ 'TL', 'TT', 'TR', 'LL', 'CC', 'RR', 'BL', 'BB', 'BR' ]
-    let blocksMap = {}
+//     const sections = getSections(gridOptions)
+//     let activeSections = [ 'TL', 'TT', 'TR', 'LL', 'CC', 'RR', 'BL', 'BB', 'BR' ]
+//     let blocksMap = {}
 
-    // const nodes = blocks.map((b) => new Node(b))
-    blocks.forEach((b) => {
-        const n = new Node(b)
+//     // const nodes = blocks.map((b) => new Node(b))
+//     blocks.forEach((b) => {
+//         const n = new Node(b)
 
-        activeSections.forEach((s) => {
-            if (sections[s].In(n)) {
-                if (blocksMap[s]) {
-                    blocksMap[s].push(n)
-                } else {
-                    blocksMap[s] = [n]
-                }
-            }
-        } )
-    })
+//         activeSections.forEach((s) => {
+//             if (sections[s].In(n)) {
+//                 if (blocksMap[s]) {
+//                     blocksMap[s].push(n)
+//                 } else {
+//                     blocksMap[s] = [n]
+//                 }
+//             }
+//         } )
+//     })
 
-    Object.keys(blocksMap).forEach((m) => {
-        localLayout(blocksMap[m], sections[m])
-    })
-}
+//     Object.keys(blocksMap).forEach((m) => {
+//         localLayout(blocksMap[m], sections[m])
+//     })
+// }
 
-function localLayout(nodes, section) {
+export function localLayout(selectedBlocks, section) {
 
-    if (section instanceof Section) {
-        const ver =  section.verticalCentralLine
-        nodes.push(ver)
+    const bbox = section.getBBox()
+    let blocks = selectedBlocks.map((b) => new Node(b))
+    const s = new Section(bbox.x , bbox.y, bbox.width, bbox.height)
+    let mode, alignmentLine;
+    if (s.width - s.height > RECTANGLE_THRESHOLD) { // horizontal mode
+        mode = "HZ"
+        alignmentLine =  s.horizontalCentralLine
+    } else if (s.height - s.width > RECTANGLE_THRESHOLD) { // vertical mode
+        mode = "VR"
+        alignmentLine =  s.verticalCentralLine
+    } else { // square mode
+        mode = "SQ"
+    }
+    // console.log('hi')
     
-        directedForce(nodes, section, {
-            i: 10,
-            k: 0.0002,
+    let nodes = []
+    nodes.push(alignmentLine)
+    // blocks[0].anchor(s.center)
+
+    nodes = [...nodes, ...blocks]
+
+    let i = 10000
+    setInterval(() => {
+        i--
+        if (i <= 0) return
+        directedForce(nodes, s, {
+            i: 1,
+            k: 0.002,
             h: 0.01,
-            l: 50,
+            l: 100,
             p: 0,
             c: 0, // ignore the Coulomb's law
-            s: 0.05 // over this tranlation volume will be igmored
+            s: 0.05 // over this tranlation volume will be ignored
         })
-    }
+    }, 5);
 }
 
 export function drawSections(graph, GRID) {
@@ -84,97 +105,38 @@ export function drawSections(graph, GRID) {
     graph.addCells(leftLine, rightLine, topLine, bottomLine)
 }
 
-function getSections(gridOptions) {
+// function getSections(gridOptions) {
 
-    //algo that decide grid paramters (a, b, c, d)
+//     //algo that decide grid paramters (a, b, c, d)
 
-    const { a, b, c, d } = gridOptions
+//     const { a, b, c, d } = gridOptions
     
-    let sections = {
+//     let sections = {
 
-        // basic 9 section
-        TL: new Section(0, 0, a, c),
-        TT: new Section(a, 0, w-a-b, c),
-        TR: new Section(w-b, 0, b, c),
+//         // basic 9 section
+//         TL: new Section(0, 0, a, c),
+//         TT: new Section(a, 0, w-a-b, c),
+//         TR: new Section(w-b, 0, b, c),
 
-        LL: new Section(0, c, a, h-d-c),
-        CC: new Section(a, c, w-b-a, h-d-c),
-        RR: new Section(w-b, c, b, h-d-c),
+//         LL: new Section(0, c, a, h-d-c),
+//         CC: new Section(a, c, w-b-a, h-d-c),
+//         RR: new Section(w-b, c, b, h-d-c),
 
-        BL: new Section(0, c, a, d),
-        BB: new Section(a, 0, w-b-a, d),
-        BR: new Section(w-b, 0, b, d),
+//         BL: new Section(0, c, a, d),
+//         BB: new Section(a, 0, w-b-a, d),
+//         BR: new Section(w-b, 0, b, d),
 
-        // compound sections
-        T: new Section(0, 0, w, a), // TL+TT+TR
-        B: new Section(0, h-d, w, d), // BL+BB+BR
-        L: new Section(0, 0, a, h), // TL+LL+BL
-        R: new Section(w-b, 0, b, h), // TR+RR+BR
+//         // compound sections
+//         T: new Section(0, 0, w, a), // TL+TT+TR
+//         B: new Section(0, h-d, w, d), // BL+BB+BR
+//         L: new Section(0, 0, a, h), // TL+LL+BL
+//         R: new Section(w-b, 0, b, h), // TR+RR+BR
 
-    }
+//     }
 
-    return sections
+//     return sections
 
-}
-
-
-class Section {
-    constructor(x, y, width, height) {
-        this.origin = {
-            x: x,
-            y: y,
-        }
-        this.width = width
-        this.height = height
-    }
-
-    get bottomRight() {
-        return { x: this.topLeft.x + this.width, y: this.topLeft.y + this.height}
-    }
-
-    get topLeft() {
-        return this.origin
-    }
-
-    // get bottomLeft() {
-    // }
-
-    // get topRight() {
-    // }
-
-    get center() {
-        return {
-            x: this.origin.x + this.width/2,
-            y: this.origin.y + this.height/2
-        }
-    }
-
-    get horizontalCentralLine() {
-        return new Line({y: this.center.y})
-    }
-
-    get verticalCentralLine() {
-        return new Line({x: this.center.x})
-    }
-
-    In(node) {
-        if (node instanceof Node) {
-            const { x, y } = node.center
-            if (x >= this.topLeft.x && x <= this.bottomRight.x
-                    && y >= this.topLeft.y && y <= this.bottomRight.y) {
-                        return true
-                    }
-        } else {
-            const { x, y } = node // { x,y } format
-            if (x >= this.topLeft.x && x <= this.bottomRight.x
-                && y >= this.topLeft.y && y <= this.bottomRight.y) {
-                    return true
-                }
-        }
-
-        return false
-    }
-}
+// }
 
 function directedForce(nodes, section, params) {
 
@@ -222,9 +184,17 @@ function directedForce(nodes, section, params) {
                         // console.log('Line force', attr(n, m, p))
                         f = Vector.add(f, attr(n, m, p)) // if m is a line, ignore the replusive force
                     } else {
-                        const length = k * n.area * m.area / distance(m, n)
-                        console.log('lenght', length)
-                        f = Vector.add(f, attr(n, m, length))
+                        // const length = k * n.area * m.area / distance(m, n)
+                        // console.log('lenght', length)s
+                        if (!n.isAnchor === undefined) {
+                            console.log('hi')
+                            m = n.anchorNode
+                            f = Vector.add(f, attr(n, m, l))
+                        } else {
+                            console.log('hi')
+                            f = Vector.add(f, attr(n, m, l))
+                        }
+
                         // const r = Vector.mult(Vector.add(f, rep(n, m)), Math.pow(c, i))
                         // f = Vector.add(f, r)
                     }
@@ -233,16 +203,13 @@ function directedForce(nodes, section, params) {
                 // console.log('force', f)
                 n.translate(f.x, f.y)
             }
-    
         }
-    
         // render
         nodes.forEach(node => {
             if (node instanceof Node) {
-                node.move(section)
+                node.move()
             }
         });
-
     }
 
 }

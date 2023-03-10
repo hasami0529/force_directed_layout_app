@@ -7,6 +7,7 @@ export class Node {
         } else {
             this.bbox = { x: model, y: y } // model parameter is used as x 
         }
+        this.anchorNode = undefined
     }
 
     get x() {
@@ -23,7 +24,6 @@ export class Node {
         } else {
             return this.bbox
         }
-
     }
 
     get area() {
@@ -40,6 +40,20 @@ export class Node {
         this.model.translate(this.dx, this.dy)
         this.bbox = this.model.getBBox()
     }
+
+    anchor(node) {
+        if (node instanceof Node) {
+            this.anchorNode = node
+        } else {
+            const { x, y } = node
+            this.anchorNode =  new Node(x, y)
+        }
+    }
+
+    get isAnchor() {
+        return !this.anchorNode === undefined
+    }
+
 }
 
 export class Line {
