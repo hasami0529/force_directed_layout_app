@@ -54,6 +54,25 @@ export class Node {
         return !(this.anchorNode === undefined)
     }
 
+    get neighbors() {
+        if (this.model) {
+            return this.model.graph.getNeighbors(this.model).map(b => new Node(b))
+        } else return []
+    }
+
+    get id() {
+        return this.model.id
+    }
+
+    isNeighbor(n) {
+        if (n instanceof Node) {
+            for (const b of this.model.graph.getNeighbors(this.model)) {
+                if (n.id === b.id) return true
+            }
+            return false
+        }
+    }
+
 }
 
 export class Line {
@@ -132,5 +151,12 @@ export class Section {
         }
 
         return false
+    }
+}
+
+class Spring {
+    constructor(k, length) {
+        this.k = k
+        this.length = length
     }
 }
