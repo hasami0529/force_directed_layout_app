@@ -45,14 +45,10 @@ export const canvasSlice = createSlice({
 		addSlot(target, direction)
 	},
 	setLayoutMap: (state, action) => {
-		const gridOptions = action.payload
 		if (!state.sectionsAreDrawn){
-			drawSections(state.graph, gridOptions)
 			state.sectionsAreDrawn = true
 		}
-
-		// layout(state.blocks, gridOptions)
-		localLayout(state.selectedBlocks, state.section)
+		localLayout(state.graph, state.selectedBlocks, state.section)
 	},
 	applyLocalLayout: (state, action) => {
 		console.log(state.selectedBlocks instanceof Array)

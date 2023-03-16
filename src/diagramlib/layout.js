@@ -1,4 +1,4 @@
-import { GRID, PAPERHIEGHT as h, PAPERWIDTH as w, RECTANGLE_THRESHOLD } from './config'
+import { GRID, PAPERHIEGHT as h, PAPERHIEGHT, PAPERWIDTH, PAPERWIDTH as w, RECTANGLE_THRESHOLD } from './config'
 import { shapes, g } from 'jointjs'
 import { Vector } from 'matter-js'
 import { Line, Node, Section } from './geometry'
@@ -29,7 +29,7 @@ import { Line, Node, Section } from './geometry'
 //     })
 // }
 
-export function localLayout(selectedBlocks, section) {
+export function localLayout(graph, selectedBlocks, section) {
 
     const bbox = section.getBBox()
     let blocks = selectedBlocks.map((b) => new Node(b))
@@ -47,14 +47,21 @@ export function localLayout(selectedBlocks, section) {
     // console.log('hi')
     
     let nodes = []
+
+    // decide alignment line
     nodes.push(alignmentLine)
-    // blocks[0].anchor(s.center)
+    drawAlignmentLine(graph, alignmentLine)
+
+    console.log(s.center)
+    blocks[0].anchor(s.center)
 
     nodes = [...nodes, ...blocks]
 
-    let i = 10000
+    let i = 1000
+    
     setInterval(() => {
         i--
+        // console.log(i)
         if (i <= 0) return
         directedForce(nodes, s, {
             i: 1,
@@ -66,6 +73,32 @@ export function localLayout(selectedBlocks, section) {
             s: 0.05 // over this tranlation volume will be ignored
         })
     }, 5);
+}
+
+function drawAlignmentLine(graph, line) {
+    if (!line instanceof Line) return
+    const alignmentLine = shapes.standard.Link.define('alignmentLine', {
+        attrs: {
+            line: {
+                opacity: "20%",
+                strokeDasharray: "2 5",
+            }}
+        });
+
+    const aline = new alignmentLine() // left
+    aline.router({
+        name: "normal"
+    })
+
+    if (line.x === undefined) {
+        aline.source({ x: 0, y: line.y})
+        aline.target({ x: PAPERWIDTH, y: line.y})
+    } else {
+        aline.source({ x: line.x, y: 0})
+        aline.target({ x: line.x, y: PAPERHIEGHT})
+    }
+
+    aline.addTo(graph)
 }
 
 export function drawSections(graph, GRID) {
@@ -186,12 +219,10 @@ function directedForce(nodes, section, params) {
                     } else {
                         // const length = k * n.area * m.area / distance(m, n)
                         // console.log('lenght', length)s
-                        if (!n.isAnchor === undefined) {
-                            console.log('hi')
+                        if (n.isAnchor) {
                             m = n.anchorNode
-                            f = Vector.add(f, attr(n, m, l))
+                            f = Vector.add(f, attr(n, m, 0))
                         } else {
-                            console.log('hi')
                             f = Vector.add(f, attr(n, m, l))
                         }
 

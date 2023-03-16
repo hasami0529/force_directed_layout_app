@@ -51,7 +51,7 @@ export class Node {
     }
 
     get isAnchor() {
-        return !this.anchorNode === undefined
+        return !(this.anchorNode === undefined)
     }
 
 }

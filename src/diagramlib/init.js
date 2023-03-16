@@ -96,7 +96,7 @@ export function init() {
         //     return anchorFn(view, magnet, ...rest);
         // },
         interactive: (cellView, method) => {
-            if (cellView.model.attributes.type === 'sectionDivider') return false
+            if (cellView.model.attributes.type === 'alignmentLine') return false
             return true
         }
 
