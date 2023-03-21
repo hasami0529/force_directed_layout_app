@@ -84,7 +84,7 @@ export function createBlock() {
     rect.attr(attrs)
     rect.role = 'Block'
     rect.position(100, 30);
-    rect.resize(100, 40);
+    rect.resize(100, 70);
     // rect.addTo(graph) // shouldn't be here
 
     return { rect }

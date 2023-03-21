@@ -124,7 +124,6 @@ function directedForce(nodes, section, params) {
                     } else {
 
                         if (n.isNeighbor(m)) {
-                            console.log('hi')
                             if (n.isAnchor) {
                                 m = n.anchorNode
                                 f = Vector.add(f, attr(n, m, 0))

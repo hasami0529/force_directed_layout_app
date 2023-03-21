@@ -20,7 +20,7 @@ function demo_diagram1(graph, paper) {
     // create block
     const RAM = createBlockWithParam(paper, graph, 'RAM', ['RAM', 'center'])
     const ROM = createBlockWithParam(paper, graph, 'ROM', ['DAC', 'ROM'])
-    const PCMCIAController = createBlockWithParam(paper, graph, 'PCMCIA Controller', ['controller', 'output'])
+    const PCMCIAController = createBlockWithParam(paper, graph, 'PCMCIA', ['controller', 'output'])
     const CPU = createBlockWithParam(paper, graph, 'CPU', ['center', 'CPU'])
     const touchPanel = createBlockWithParam(paper, graph, 'Touch Panel', ['center', 'output'])
     const LCDPanel = createBlockWithParam(paper, graph, 'LCD Panel', ['center', 'output'])
