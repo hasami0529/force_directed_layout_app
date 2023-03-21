@@ -141,7 +141,7 @@ export function initPaperEvents(paper, dispatch) {
                         canvasActions.setFocus({ model: elementView.model })
                     )
                     dispatch(
-                        taglibActions.showTags({elementId: elementView.id})
+                        taglibActions.showTags({ model: elementView.model })
                     )
                     dispatch(
                         inspectActions.showBlockInfo({ model: elementView.model })

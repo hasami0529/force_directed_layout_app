@@ -44,6 +44,7 @@ export const taglibSlice = createSlice({
       allTags: [],
       checked: [],
       expanded: [],
+      focus: null
     },
     elements: []
   },
@@ -52,7 +53,7 @@ export const taglibSlice = createSlice({
       state.elements = action.payload.elements
     },
     showTags: (state, action) => {
-      state.tags['allTags'] = get_all_tags()
+      state.focus = action.payload.model
     },
     check: (state, action) => {
       state.tags['checked'] = action.payload

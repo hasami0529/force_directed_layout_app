@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectTaglib, taglibActions } from "../store/slice/taglib";
+import taglib, { selectTaglib, taglibActions } from "../store/slice/taglib";
 import CheckboxTree from 'react-checkbox-tree';
 
 // for tabs
@@ -10,30 +10,46 @@ import Box from '@mui/material/Box';
 import TagIcon from '@mui/icons-material/Tag';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 
+// for tag list 
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ListItemIcon from '@mui/material/ListItemIcon';
+
+
 function Tags(props) {
-  const { value, index,  } = props;
   const states = useSelector(selectTaglib);
-  const dispatch = useDispatch()
 
+let tags = []
+  if (states.focus) {
+      states.focus.tags.forEach( tag => {
+        tags.push(<Tag tag={tag}></Tag>)
+      })
+      return(
+        <List dense={true}>{tags}</List>
+      )
+  }
+}
+
+function Tag(props) {
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-    >
-        <CheckboxTree
-                nodes={states.tags['allTags']}
-                checked={states.tags['checked']}
-                expanded={states.tags['expanded']}
-                onCheck={ (checked, target) => dispatch(taglibActions.check(checked)) }
-                onExpand={ (expanded, target) => { dispatch(taglibActions.expand(expanded))}}
-                noCascade={true}
-                showExpandAll={true}
-            />
-
-    </div>
-  );
+      <ListItem
+        secondaryAction={
+          <IconButton edge="end" aria-label="delete">
+            <DeleteIcon />
+          </IconButton>
+        }
+      >
+        <ListItemIcon>
+          <TagIcon />
+        </ListItemIcon>
+        <ListItemText
+          primary={props.tag}
+        />
+      </ListItem>
+  )
 }
 
 function a11yProps(index) {
