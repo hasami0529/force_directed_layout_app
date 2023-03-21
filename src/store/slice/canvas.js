@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { addBlock, init, demo, setLabel, initPaperEvents, addPort, addSlot } from '../../diagramlib'
+import { drawSections, layout, localLayout } from '../../diagramlib/layout';
 
 export const canvasSlice = createSlice({
   name: "canvas",
@@ -8,6 +9,10 @@ export const canvasSlice = createSlice({
 	  graph: null,
 	  init: false,
 	  focus: null,
+	  blocks: [], // for demo,
+	  sectionsAreDrawn: false,
+	  selectedBlocks: [],
+	  section: null
   },
   reducers: {
 	initPaper: (state, action) => {
@@ -16,7 +21,7 @@ export const canvasSlice = createSlice({
 			state.graph = graph
 			state.paper = paper
 			initPaperEvents(paper, action.payload.dispatch)
-			demo(state.graph, state.paper)
+			state.blocks = demo(state.graph, state.paper)
 			state.init = true
 		}
 	},
@@ -38,6 +43,24 @@ export const canvasSlice = createSlice({
 	addSlot: (state, action) => {
 		const { target, direction } = action.payload
 		addSlot(target, direction)
+	},
+	setLayoutMap: (state, action) => {
+		if (!state.sectionsAreDrawn){
+			state.sectionsAreDrawn = true
+		}
+		localLayout(state.graph, state.selectedBlocks, state.section)
+	},
+	applyLocalLayout: (state, action) => {
+		console.log(state.selectedBlocks instanceof Array)
+		state.section = action.payload.section
+		// localLayout(state.selectedBlocks, action.payload.section)
+	},
+	highlight: (state, action) => {
+		state.selectedBlocks = [ ...state.selectedBlocks, action.payload.model ]
+	},
+	dehighlight: (state, action) => {
+		state.selectedBlocks = 
+			state.selectedBlocks.filter((e) => !(e.id === action.payload.model.id) )
 	}
   },
 });

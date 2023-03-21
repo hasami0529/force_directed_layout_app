@@ -1,13 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { modelToInfo } from '../../utils'
-import { dia } from 'jointjs'
-
-// utils to get model info
-function getLabel(model) {
-  if (model instanceof dia.Element){
-    return model.attributes.attrs.label.text
-  }
-}
 
 export const inspectSlice = createSlice({
   name: "inspect",
@@ -15,6 +7,7 @@ export const inspectSlice = createSlice({
 	  id: '',
     label: '',
     role: '',
+    tags: ''
   },
   reducers: {
     showBlockInfo: (state, action) => {

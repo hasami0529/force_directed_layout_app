@@ -10,6 +10,8 @@ import { contextMenuActions } from '../store/slice/contextmenu'
 import { taglibActions } from '../store/slice/taglib';
 import { canvasActions } from '../store/slice/canvas';
 
+import { PAPERHIEGHT, PAPERWIDTH, POINTER_MOVE_THRESHLOLD } from './config'
+
 export function init() {
     var namespace = shapes;
     var graph = new dia.Graph({}, { cellNamespace: namespace });
@@ -17,16 +19,17 @@ export function init() {
     var paper = new dia.Paper({
         el: document.getElementById("canvas"),
         model: graph,
-        width: "100%",
-        height: "100%",
+        width: PAPERWIDTH,
+        height: PAPERHIEGHT,
         gridSize: 1,
         cellViewNamespace: namespace,
         preventContextMenu: true,
         preventDefaultBlankAction: true,
+        restrictTranslate: true,
 
 
         highlighting: false,
-        embeddingMode: true,
+        embeddingMode: false,
 
         // connection related config
         snapLinks: true,
@@ -43,7 +46,7 @@ export function init() {
         // },
         // shouldn't be bbox
         defaultConnectionPoint: {
-            name: 'anchor',
+            name: 'boundary',
             args: {
                 // offset: 10,
                 // stroke: true,
@@ -65,33 +68,37 @@ export function init() {
                 return true
             }
         },
-        defaultAnchor: (view, magnet, _, args) => {
-            const group = view.findAttribute("port-group", magnet);
-            return customAnchor(group, view, magnet, _, args)
-        },
-        defaultLinkAnchor: (view, magnet, ...rest) => {
-            const group = view.findAttribute("port-group", magnet);
-            let anchorFn;
-            console.log(group)
-            switch (group) {
-                case 'left':
-                    anchorFn = anchors.left
-                    break;
-                case 'right':
-                    anchorFn = anchors.right
-                    break;
-                case 'top':
-                    anchorFn = anchors.top
-                    break;
-                case 'bottom':
-                    anchorFn = anchors.bottom
-                    break;
-                default:
-                    break;
-            }
-            // const anchorFn = group === "in" ? anchors.left : anchors.right;
-            return anchorFn(view, magnet, ...rest);
-        },
+        // defaultAnchor: (view, magnet, _, args) => {
+        //     const group = view.findAttribute("port-group", magnet);
+        //     return customAnchor(group, view, magnet, _, args)
+        // },
+        // defaultLinkAnchor: (view, magnet, ...rest) => {
+        //     const group = view.findAttribute("port-group", magnet);
+        //     let anchorFn;
+        //     console.log(group)
+        //     switch (group) {
+        //         case 'left':
+        //             anchorFn = anchors.left
+        //             break;
+        //         case 'right':
+        //             anchorFn = anchors.right
+        //             break;
+        //         case 'top':
+        //             anchorFn = anchors.top
+        //             break;
+        //         case 'bottom':
+        //             anchorFn = anchors.bottom
+        //             break;
+        //         default:
+        //             break;
+        //     }
+        //     // const anchorFn = group === "in" ? anchors.left : anchors.right;
+        //     return anchorFn(view, magnet, ...rest);
+        // },
+        interactive: (cellView, method) => {
+            if (cellView.model.attributes.type === 'alignmentLine') return false
+            return true
+        }
 
     });
 
@@ -119,7 +126,6 @@ export function initPaperEvents(paper, dispatch) {
     })
 
     paper.on('element:pointerclick', (elementView) => {
-        console.log(elementView.model.role)
         switch (elementView.model.role) {
             case 'Block':
                 if (!highlighters.mask.get(elementView).length) {
@@ -140,9 +146,16 @@ export function initPaperEvents(paper, dispatch) {
                     dispatch(
                         inspectActions.showBlockInfo({ model: elementView.model })
                     )
+
+                    dispatch(
+                        canvasActions.highlight({ model: elementView.model })
+                    )
                     
                 } else {
                     highlighters.mask.remove(elementView);
+                    dispatch(
+                        canvasActions.dehighlight({ model: elementView.model })
+                    )
                 }
                 break;
         
@@ -198,38 +211,50 @@ export function initPaperEvents(paper, dispatch) {
         'blank:pointerdown': function(evt, x, y) {
             var data = evt.data = {};
 
-            const { container } = createContainer(paper)
-            container.position(x, y);
-            container.toBack()
             data.x = x;
             data.y = y;
-
-            container.addTo(this.model);
-            data.container = container;
         },
         'blank:pointermove': function(evt, x, y) {
-            var data = evt.data;
-            var container = data.container;
-            var bbox = new g.Rect(data.x, data.y, x - data.x, y - data.y);
-            bbox.normalize();
-            container.set({
-                position: { x: bbox.x, y: bbox.y },
-                size: { width: Math.max(bbox.width, 1), height: Math.max(bbox.height, 1) }
-                });
+            const data = evt.data;
+            const d = { x: x - data.x, y: y - data.y}
+            if (Math.abs(d.x) < POINTER_MOVE_THRESHLOLD && Math.abs(d.y) < POINTER_MOVE_THRESHLOLD) return
+            if (!data.container) {
+                const { container } = createContainer(paper)
+                container.position(x, y);
+                container.toBack()
+                data.x = x;
+                data.y = y;
+                container.addTo(this.model);
+                data.container = container;
+            } else { // a container has created
+                var container = data.container;
+                var bbox = new g.Rect(data.x, data.y, d.x, d.y);
+                bbox.normalize();
+                container.set({
+                    position: { x: bbox.x, y: bbox.y },
+                    size: { width: Math.max(bbox.width, 1), height: Math.max(bbox.height, 1) }
+                    }); // a bug here
+            }
+
+
         },
         'blank:pointerup': function(evt) {
+            if (!evt.data.container) return
             var container = evt.data.container
             const containerId = container.id
             const seletedBlocks = this.findViewsInArea(container.getBBox())
-            // console.log(container.id)
+
+            dispatch(
+                canvasActions.applyLocalLayout({ section: container })
+            )
+
+            // container functinalities, ignore for now
             if (seletedBlocks.length > 1) {
                 for (const b of seletedBlocks) {
                     if (b.model.id === containerId) continue
-                    container.embed(b.model)
-                    container.fitEmbeds({deep: true, padding: 10})
+                    // container.embed(b.model)
+                    // container.fitEmbeds({deep: true, padding: 10})
                 }
-            } else {
-                container.remove()
             }
         },
     })
@@ -245,8 +270,10 @@ export function initPaperEvents(paper, dispatch) {
     })
 
     paper.on('link:mouseenter', (linkView) => {
-        linkView.addTools(normalLinkToolsView)
-        // linkView.showTools()
+        if (!linkView.model.attributes.type === 'sectionDivider') {
+            console.log(linkView)
+            linkView.addTools(normalLinkToolsView)
+        }
     })
 
     paper.on('link:mouseleave', (linkView) => {
