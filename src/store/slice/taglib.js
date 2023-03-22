@@ -40,27 +40,19 @@ export const taglibSlice = createSlice({
   name: "taglib",
   initialState: {
 	  elementId: '',
-    tags: {
-      allTags: [],
-      checked: [],
-      expanded: [],
-      focus: null
-    },
-    elements: []
+    tags: [],
+    focus: null,
   },
   reducers: {
-    renderElements: (state, action) => {
-      state.elements = action.payload.elements
-    },
     showTags: (state, action) => {
-      state.focus = action.payload.model
+      const model = action.payload.model
+      state.elementId = model.id
+      state.tags = model.tags
+      state.focus = model
     },
-    check: (state, action) => {
-      state.tags['checked'] = action.payload
-    },
-    expand: (state, action) => {
-      console.log(action.payload)
-      state.tags['expanded'] = action.payload
+    addTag: (state, action) => {
+      state.tags.push(action.payload.tag)
+      state.focus.tags.push(action.payload.tag)
     }
   },
 });
