@@ -24,6 +24,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 function Tags(props) {
   const states = useSelector(selectTaglib);
 
+
 let tags = []
   if (states.focus) {
       states.tags.forEach( tag => {
@@ -35,11 +36,23 @@ let tags = []
   }
 }
 
+
+
 function Tag(props) {
+  const dispatch = useDispatch()
+
+  function deleteTag(e) {
+    const tag = e.target.value
+    console.log(e)
+    dispatch(
+      taglibActions.deleteTag({ tag: props.tag })
+    )
+  }
+  
   return (
       <ListItem
         secondaryAction={
-          <IconButton edge="end" aria-label="delete">
+          <IconButton edge="end" aria-label="delete" onClick={deleteTag}>
             <DeleteIcon />
           </IconButton>
         }
@@ -63,6 +76,7 @@ function TagInputFeild() {
   }
 
   function handleAddTag() {
+    if (text === '')  return
     dispatch(
       taglibActions.addTag({ tag: text })
     )
@@ -70,14 +84,14 @@ function TagInputFeild() {
 
   return(
     <Stack direction="row" space={2}>
-    <ListItemIcon>
-      <TagIcon />
-    </ListItemIcon>
-    <Input defaultValue="add new tag" inputProps={''} onChange={handleChangeText} />
-    <IconButton onClick={handleAddTag}>
-      <AddCircleIcon></AddCircleIcon>
-    </IconButton>
-  </Stack>
+      <ListItemIcon>
+        <TagIcon />
+      </ListItemIcon>
+      <Input defaultValue="add new tag" inputProps={''} onChange={handleChangeText} />
+      <IconButton onClick={handleAddTag}>
+        <AddCircleIcon></AddCircleIcon>
+      </IconButton>
+    </Stack>
   )
 }
 

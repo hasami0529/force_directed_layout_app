@@ -51,8 +51,17 @@ export const taglibSlice = createSlice({
       state.focus = model
     },
     addTag: (state, action) => {
-      state.tags.push(action.payload.tag)
-      state.focus.tags.push(action.payload.tag)
+      state.focus.tags = [ ...state.tags, action.payload.tag]
+      state.tags = state.focus.tags
+    },
+    deleteTag: (state, action) => {
+      let tags = state.focus.tags
+
+      tags = tags.filter((e) => e !== action.payload.tag)
+
+      state.focus.tags = tags
+      state.tags = state.focus.tags
+
     }
   },
 });
