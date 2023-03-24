@@ -1,40 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import tags from './tags.json'
-
-function toCheckbox(tag_name, config) {
-  return (
-    {
-      value: tag_name, // space_case
-      label: tag_name, // snake_case,
-      icon: null,
-      ...config
-    }
-  )
-}
-
-function build(tag) {
-  if (tag.taggable === undefined) tag.taggable = true
-  if (tag.children) {
-    let c = []
-    tag.children.forEach( e => {
-      c.push(build(e))
-    })
-    return { ...toCheckbox(tag.name, { showCheckbox: tag.taggable }), children: c}
-  } else {
-    return toCheckbox(tag.name, { showCheckbox: tag.taggable })
-  }
-}
-
-function get_all_tags() {
-  let nodes = []
-
-  tags['tags'].forEach(element => {
-      nodes.push(build(element))
-  })
-  console.log(nodes)
-
-  return nodes
-} 
+import { responseToTag, init } from "../../diagramlib/tag_engine";
 
 export const taglibSlice = createSlice({
   name: "taglib",
@@ -44,6 +9,9 @@ export const taglibSlice = createSlice({
     focus: null,
   },
   reducers: {
+    init: (state, action) => {
+      init()
+    },
     showTags: (state, action) => {
       const model = action.payload.model
       state.elementId = model.id
@@ -51,17 +19,20 @@ export const taglibSlice = createSlice({
       state.focus = model
     },
     addTag: (state, action) => {
-      state.focus.tags = [ ...state.tags, action.payload.tag]
+      const tag = action.payload.tag
+      const model = state.focus
+
+      responseToTag(model, tag)
+
+      state.focus.tags = [ ...state.tags, tag]
       state.tags = state.focus.tags
+      
     },
     deleteTag: (state, action) => {
       let tags = state.focus.tags
-
       tags = tags.filter((e) => e !== action.payload.tag)
-
       state.focus.tags = tags
       state.tags = state.focus.tags
-
     }
   },
 });

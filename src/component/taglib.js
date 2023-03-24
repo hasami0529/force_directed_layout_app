@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useSelector, useDispatch, } from "react-redux";
 import { selectTaglib, taglibActions } from "../store/slice/taglib";
 
@@ -70,6 +70,7 @@ function Tag(props) {
 function TagInputFeild() {
   const [text, setText] = useState('')
   const dispatch = useDispatch()
+  const inputField = useRef(null)
 
   function handleChangeText(value) {
     setText(value.target.value)
@@ -80,14 +81,13 @@ function TagInputFeild() {
     dispatch(
       taglibActions.addTag({ tag: text })
     )
+
   }
 
   return(
     <Stack direction="row" space={2}>
-      <ListItemIcon>
-        <TagIcon />
-      </ListItemIcon>
-      <Input defaultValue="add new tag" inputProps={''} onChange={handleChangeText} />
+
+      <Input ref={inputField} placeholder="new tag" inputProps={''} onChange={handleChangeText} />
       <IconButton onClick={handleAddTag}>
         <AddCircleIcon></AddCircleIcon>
       </IconButton>
