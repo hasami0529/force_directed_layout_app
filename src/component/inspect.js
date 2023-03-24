@@ -43,19 +43,14 @@ function createData(states) {
     }
   })
 
-  // console.log(n)
   return n
 }
 
 function handleOnChange(e, dispatch) {
-  // console.log(e)
+
   dispatch(
     canvasActions.changeLabel({ label: e.target.value })
   )
-}
-
-function editMode() {
-  console.log('edit')
 }
 
 function EditableField(props) {

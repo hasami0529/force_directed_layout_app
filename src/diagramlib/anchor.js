@@ -1,7 +1,6 @@
 
 export function customAnchor(direction, endView, endMagnet, anchorReference, args) {
     const { top, left, right, bottom, height, width } = endMagnet.getBoundingClientRect()
-
     switch (direction) {
         case 'left':
             return endView.paper.clientToLocalPoint(left, top+width/2)
@@ -14,6 +13,4 @@ export function customAnchor(direction, endView, endMagnet, anchorReference, arg
         default:
             break;
     }
-
-
 }

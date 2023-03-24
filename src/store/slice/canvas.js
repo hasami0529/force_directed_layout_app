@@ -51,7 +51,6 @@ export const canvasSlice = createSlice({
 		localLayout(state.graph, state.selectedBlocks, state.section)
 	},
 	applyLocalLayout: (state, action) => {
-		console.log(state.selectedBlocks instanceof Array)
 		state.section = action.payload.section
 		// localLayout(state.selectedBlocks, action.payload.section)
 	},

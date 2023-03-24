@@ -23,7 +23,6 @@ export function addPort(model, direction) {
 }
 
 export function addSlot(model, direction) {
-    console.log(model)
 
     model.addPort({
         group: direction,
