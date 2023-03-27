@@ -14,12 +14,6 @@ function PaperMenu(props) {
     dispatch(
       canvasActions.addBlock()
     )
-    if (graph) {
-      // console.log(graph.getElements())
-      dispatch(
-        taglibActions.renderElements({ elements: graph.getElements() })
-      )
-    }
   }
 
   return (

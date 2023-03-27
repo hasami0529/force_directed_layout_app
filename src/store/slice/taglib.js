@@ -21,8 +21,9 @@ export const taglibSlice = createSlice({
     addTag: (state, action) => {
       const tag = action.payload.tag
       const model = state.focus
+      const paper = action.payload.paper
 
-      responseToTag(model, tag)
+      responseToTag(paper, model, tag)
 
       state.focus.tags = [ ...state.tags, tag]
       state.tags = state.focus.tags

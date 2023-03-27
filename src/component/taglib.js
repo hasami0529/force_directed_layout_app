@@ -19,6 +19,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Input from '@mui/material/Input';
 import Stack from '@mui/material/Stack';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { selectCanvas } from "../store/slice/canvas";
 
 
 function Tags(props) {
@@ -71,6 +72,7 @@ function TagInputFeild() {
   const [text, setText] = useState('')
   const dispatch = useDispatch()
   const inputField = useRef(null)
+  const { paper } = useSelector(selectCanvas)
 
   function handleChangeText(value) {
     setText(value.target.value)
@@ -79,7 +81,7 @@ function TagInputFeild() {
   function handleAddTag() {
     if (text === '')  return
     dispatch(
-      taglibActions.addTag({ tag: text })
+      taglibActions.addTag({ tag: text, paper: paper })
     )
 
   }

@@ -10,16 +10,14 @@ export function init() {
         colorCache[funcName] = styleTags[funcName]
         color.push(styleTags[funcName])
     })
-
-    console.log(colorCache)
 }
 
 const colorGenerator = randomColor()
 
-export function responseToTag(model, tag) {
+export function responseToTag(paper, model, tag) {
     if (model instanceof dia.Cell) {
         const func = getShape(tag)
-        func(model)
+        func(paper, model)
     }
 }
 
