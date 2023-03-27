@@ -9,9 +9,10 @@ const attrs = {
         class: 'block'
     },
     label: {
-        text: 'block',
+        text: 'Bus',
         fill: 'black'
     },
+    bodyPath: {},
     ports: {
         groups: {
             'left': leftPort,
@@ -82,6 +83,23 @@ export function createBlock() {
 
     var rect = new shapes.standard.Rectangle(attrs);
     rect.attr(attrs)
+    // rect.markup = [{
+    //         tagName: "rect",
+    //         selector: "body",
+    //         style: {
+    //             "fill": '#2BF0FB', // be defined in css
+    //             "class": 'block'
+    //         }
+    //     },
+    //     {
+    //         tagName: "text",
+    //         selector: "label",
+    //         attributes: {
+    //             "label": 'block',
+    //             "fill": 'black'
+    //         }
+    //     }
+    // ]
     rect.role = 'Block'
     rect.position(100, 30);
     rect.resize(100, 70);
