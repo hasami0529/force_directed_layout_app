@@ -9,7 +9,7 @@ const attrs = {
         class: 'block'
     },
     label: {
-        text: 'Bus',
+        text: 'blocks',
         fill: 'black'
     },
     bodyPath: {},
