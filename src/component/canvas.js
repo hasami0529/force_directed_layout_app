@@ -1,5 +1,4 @@
 import { canvasActions } from '../store/slice/canvas';
-import { taglibActions } from '../store/slice/taglib';
 import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 
@@ -13,9 +12,7 @@ export function Canvas() {
             dispatch(
                 canvasActions.initPaper({ dispatch, })
             )
-            dispatch(
-                taglibActions.init()
-            )
+
         },[]
     )
 

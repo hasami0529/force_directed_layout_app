@@ -5,16 +5,18 @@ let colorCache = {}
 
 let color = []
 
-export function init() {
+export function initTagsLib() {
     Object.keys(styleTags).forEach( funcName => {
         colorCache[funcName] = styleTags[funcName]
         color.push(styleTags[funcName])
     })
+    // console.log(colorCache)
 }
 
 const colorGenerator = randomColor()
 
 export function responseToTag(paper, model, tag) {
+    console.log(colorCache)
     if (model instanceof dia.Cell) {
         const func = getShape(tag)
         func(paper, model)

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { addBlock, init, demo, setLabel, initPaperEvents, addPort, addSlot } from '../../diagramlib'
 import { drawSections, layout, localLayout } from '../../diagramlib/layout';
+import { initTagsLib } from "../../diagramlib/tag_engine";
 
 export const canvasSlice = createSlice({
   name: "canvas",
@@ -21,6 +22,7 @@ export const canvasSlice = createSlice({
 			state.graph = graph
 			state.paper = paper
 			initPaperEvents(paper, action.payload.dispatch)
+			initTagsLib()
 			state.blocks = demo(state.graph, state.paper)
 			state.init = true
 		}

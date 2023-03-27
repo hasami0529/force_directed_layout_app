@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { responseToTag, init } from "../../diagramlib/tag_engine";
+import { responseToTag } from "../../diagramlib/tag_engine";
 
 export const taglibSlice = createSlice({
   name: "taglib",
@@ -9,9 +9,6 @@ export const taglibSlice = createSlice({
     focus: null,
   },
   reducers: {
-    init: (state, action) => {
-      init()
-    },
     showTags: (state, action) => {
       const model = action.payload.model
       state.elementId = model.id

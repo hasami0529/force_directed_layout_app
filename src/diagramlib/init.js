@@ -129,7 +129,7 @@ export function initPaperEvents(paper, dispatch) {
         switch (elementView.model.role) {
             case 'Block':
                 if (!highlighters.mask.get(elementView).length) {
-                    highlighters.mask.add(elementView, { selector: 'root' }, 'my-element-highlight', {
+                    highlighters.mask.add(elementView, { selector: 'body' }, 'my-element-highlight', {
                         deep: true,
                         attrs: {
                             'stroke': '#F2CC0F',
@@ -190,12 +190,12 @@ export function initPaperEvents(paper, dispatch) {
             case 'Block':
                 elementView.addTools(blockToolView)
                 break
-            case 'expanded-container':
-                elementView.addTools(expandedContainerToolsView)
-                break
-            case 'collapsed-container':
-                elementView.addTools(collapsedContainerToolsView)
-                break
+            // case 'expanded-container':
+            //     elementView.addTools(expandedContainerToolsView)
+            //     break
+            // case 'collapsed-container':
+            //     elementView.addTools(collapsedContainerToolsView)
+            //     break
             default :
                 console.log("nothing happened")
         }
@@ -203,7 +203,7 @@ export function initPaperEvents(paper, dispatch) {
     });
     
     paper.on('element:mouseleave', function(elementView) {
-        elementView.hideTools();
+        // elementView.hideTools();
     });
 
     // for create container/group
