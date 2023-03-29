@@ -185,26 +185,26 @@ export function initPaperEvents(paper, dispatch) {
 
     })
 
-    paper.on('element:mouseenter', function(elementView) {
-        switch(elementView.model.role) {
-            case 'Block':
-                elementView.addTools(blockToolView)
-                break
-            // case 'expanded-container':
-            //     elementView.addTools(expandedContainerToolsView)
-            //     break
-            // case 'collapsed-container':
-            //     elementView.addTools(collapsedContainerToolsView)
-            //     break
-            default :
-                console.log("nothing happened")
-        }
-        elementView.showTools();
-    });
+    // paper.on('element:mouseenter', function(elementView) {
+    //     switch(elementView.model.role) {
+    //         case 'Block':
+    //             elementView.addTools(blockToolView)
+    //             break
+    //         // case 'expanded-container':
+    //         //     elementView.addTools(expandedContainerToolsView)
+    //         //     break
+    //         // case 'collapsed-container':
+    //         //     elementView.addTools(collapsedContainerToolsView)
+    //         //     break
+    //         default :
+    //             console.log("nothing happened")
+    //     }
+    //     elementView.showTools();
+    // });
     
-    paper.on('element:mouseleave', function(elementView) {
-        // elementView.hideTools();
-    });
+    // paper.on('element:mouseleave', function(elementView) {
+    //     // elementView.hideTools();
+    // });
 
     // for create container/group
     paper.on({
