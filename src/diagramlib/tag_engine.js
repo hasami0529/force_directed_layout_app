@@ -1,14 +1,19 @@
 import { dia } from 'jointjs'
-import * as styleTags from './styleLib'
+import * as generalTags from './styles/general'
+import * as compTags from './styles/comp'
 
 let colorCache = {}
 
 let color = []
 
 export function initTagsLib() {
-    Object.keys(styleTags).forEach( funcName => {
-        colorCache[funcName] = styleTags[funcName]
-        color.push(styleTags[funcName])
+    Object.keys(generalTags).forEach( funcName => {
+        colorCache[funcName] = generalTags[funcName]
+        color.push(generalTags[funcName])
+    })
+
+    Object.keys(compTags).forEach( funcName => {
+        colorCache[funcName] = compTags[funcName]
     })
     // console.log(colorCache)
 }
@@ -26,8 +31,9 @@ export function responseToTag(paper, model, tag) {
 function getShape(tag) {
 
     if (colorCache[tag] === undefined){
-        colorCache[tag] = colorGenerator.next().value
-        return colorCache[tag]
+        // colorCache[tag] = colorGenerator.next().value
+        // return colorCache[tag]
+        return () => console.log('') //  jump over
     }
     else {
         return colorCache[tag]
@@ -39,7 +45,6 @@ function* randomColor() {
     while (true) {
         yield color[i]
         i = (++i % color.length)
-        console.log(i)
     }
 }
 
