@@ -1,8 +1,7 @@
 import { createNormalLink } from './shapes/link'
-import { createBlock, createBus } from './shapes/rect'
+import { createBlock } from './shapes/rect'
 import { setLabel } from '../utils'
-import { addPort } from './factory'
-import { shapes } from 'jointjs'
+
 import { responseToTag } from './tag_engine'
 
 export { addBlock, setLabel, addPort, addSlot } from './factory'
@@ -109,18 +108,76 @@ function ecomini(graph, paper) {
     // routing
 
     // rendering
-    graph.addCells(...blocks)
+
+
+
+
+    const l = createNormalLink()
+    l.source(nRF24LE1);
+    l.target(Accelerometer)
+
+    const l2 = createNormalLink()
+    l2.source(nRF24LE1);
+    l2.target(SDCard)
+
+    const l3 = createNormalLink()
+    l3.source(nRF24LE1);
+    l3.target(serialFlash)
+
+    const l4 = createNormalLink()
+    l4.source(nRF24LE1);
+    l4.target(LED1)
+
+    const l5 = createNormalLink()
+    l5.source(nRF24LE1);
+    l5.target(LED2)
+
+    const l6 = createNormalLink()
+    l6.source(nRF24LE1);
+    l6.target(Antenna)
+
+    const l7 = createNormalLink()
+    l7.source(nRF24LE1);
+    l7.target(button)
+
+    const l8 = createNormalLink()
+    l8.source(moduleInterface);
+    l8.target(camera)
+
+    const l9 = createNormalLink()
+    l9.source(moduleInterface);
+    l9.target(GPS)
+
+    const l10 = createNormalLink()
+    l10.source(moduleInterface);
+    l10.target(speaker)
+
+    const l11 = createNormalLink()
+    l11.source(moduleInterface);
+    l11.target(USB_UART)
+
+    const l12 = createNormalLink()
+    l12.source(moduleInterface);
+    l12.target(nRF24LE1)
+
+    let links = [
+        l,
+        l2,
+        l3,
+        l4,
+        l5,
+        l6,
+        l7,
+        l8,
+        l9,
+        l10,
+        l11,
+        l12
+    ]
+
+
+    graph.addCells(...blocks, ...links)
     blocks.map( model => responseToTag(paper, model, model.tags[0]))
-
-
-
-    // const link = createNormalLink()
-    
-    // link.source(CPU);
-    // link.target(RAM)
-
-    // link.addTo(graph)
-    // console.log(link)
     
 
     return blocks
