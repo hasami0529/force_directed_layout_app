@@ -1,4 +1,4 @@
-import { highlighters, g, shapes, dia, anchors } from 'jointjs'
+import { highlighters, g, shapes, dia, anchors, connectionPoints } from 'jointjs'
 import { createContainer } from './shapes/rect'
 import { blockToolView, expandedContainerToolsView, collapsedContainerToolsView } from './shapes/tools'
 import { normalLinkToolsView } from './shapes/linktool'
@@ -36,38 +36,29 @@ export function init() {
         linkPinning: false,
         // magnetThreshold: 'onleave',
         defaultRouter: {
-            name: "manhattan",
+            name: "normal",
             args: {
                 padding: 10,
             }
         },
         defaultLink: createNormalLink,
-        // defaultAnchor: function name(params) {
+        defaultConnectionPoint: connectionPoints.boundary,
+        // validateConnection: (cellViewS, magnetS, cellViewT, magnetT, end, linkView) => {
+        //     if (magnetS.getAttribute('role') === 'Port' && magnetT?.getAttribute('role') === 'Port') return true
+        //     if ((magnetS.getAttribute('role') === 'Slot' && magnetT?.getAttribute('role') === 'Port') |
+        //     (magnetS.getAttribute('role') === 'Port' && magnetT?.getAttribute('role') === 'Slot')) {
+        //         const l = createBindingLink()
+        //         l.source(cellViewS.model, {
+        //             port: magnetS.getAttribute('port')
+        //         })
+        //         l.target(cellViewT.model, {
+        //             port: magnetT.getAttribute('port')
+        //         })
+        //         l.addTo(cellViewS.model.graph)
+        //         linkView.remove()
+        //         return true
+        //     }
         // },
-        // shouldn't be bbox
-        defaultConnectionPoint: {
-            name: 'boundary',
-            args: {
-                // offset: 10,
-                // stroke: true,
-            }
-        },
-        validateConnection: (cellViewS, magnetS, cellViewT, magnetT, end, linkView) => {
-            if (magnetS.getAttribute('role') === 'Port' && magnetT?.getAttribute('role') === 'Port') return true
-            if ((magnetS.getAttribute('role') === 'Slot' && magnetT?.getAttribute('role') === 'Port') |
-            (magnetS.getAttribute('role') === 'Port' && magnetT?.getAttribute('role') === 'Slot')) {
-                const l = createBindingLink()
-                l.source(cellViewS.model, {
-                    port: magnetS.getAttribute('port')
-                })
-                l.target(cellViewT.model, {
-                    port: magnetT.getAttribute('port')
-                })
-                l.addTo(cellViewS.model.graph)
-                linkView.remove()
-                return true
-            }
-        },
         // defaultAnchor: (view, magnet, _, args) => {
         //     const group = view.findAttribute("port-group", magnet);
         //     return customAnchor(group, view, magnet, _, args)
@@ -278,6 +269,29 @@ export function initPaperEvents(paper, dispatch) {
 
     paper.on('link:mouseleave', (linkView) => {
         linkView.hideTools()
+    })
+
+    paper.on('link:connect', (linkView, evt, elementViewConnected, magnet, arrowhead) => {
+        console.log(elementViewConnected.model)
+        if (elementViewConnected.model.role === 'Block' && elementViewConnected.model.icon === 'speaker') {
+
+            linkView.model.target(elementViewConnected.model, {
+                connectionPoint: {
+                    name: "anchor",
+                },
+                anchor: {
+                    name: "left",
+                    args: {
+                        offset: {
+                            x: "5%"
+                        }
+                    }
+                }
+                
+            })
+
+            console.log(linkView)
+        }
     })
 
 }

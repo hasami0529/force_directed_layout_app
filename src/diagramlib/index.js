@@ -185,40 +185,54 @@ function ecomini(graph, paper) {
 
 export function demo(graph, paper) {
 
-    // drawSections(graph, GRID)
-    return ecomini(graph, paper)
+    // return ecomini(graph, paper)
+    return test(graph, paper)
 }
 
+export function test(graph, paper) {
+
+    const speaker = createBlockWithParam(paper, graph, 'speaker', ['speaker'])
+    speaker.resize(100, 100)
+    speaker.position(90, 450)
 
 
-// pass routing for now
-// function routing() {
-    // b1.addPort({
-    //     group: 'right',
-    //     id: 'portA',
-    // })
+    const USB_UART = createBlockWithParam(paper, graph, 'USB-UART', ['USB_UART'])
+    USB_UART.resize(100,100)
 
-    // b2.addPort({
-    //     group: 'left',
-    //     id: 'portB'
-    // })
+    USB_UART.attr('root', {
+        image:{}
+    })
+    USB_UART.icon = 'speaker'
+    
+    USB_UART.markup = [
+        {
+            tagName: 'image',
+            selector: "body",
+            attributes: {
+                href: process.env.PUBLIC_URL + 'icon/speaker.png'
+            }
+        }
+    ]
 
-    // const link = createNormalLink()
-    // link.source(b1, {
-    //     port: b1.getPorts()[0].id,
-    //     connectionPoint: {
-    //         name: 'anchor',
-    //     },
+    const l12 = createNormalLink()
+    l12.source(speaker);
+    l12.target(USB_UART, {
+        connectionPoint: {
+            name: "anchor",
+        },
+        anchor: {
+            name: "left",
+            args: {
+                offset: {
+                    x: "5%"
+                }
+            }
+        }
         
-    // });
+    })
 
-    // link.target(b2, {
-    //     port: b2.getPorts()[0].id,
-    //     connectionPoint: {
-    //         name: 'anchor',
-    //     },
-    // })
+    USB_UART.addTo(graph)
+    speaker.addTo(graph)
+    l12.addTo(graph)
 
-    // link.addTo(graph)
-
-// }
+}
