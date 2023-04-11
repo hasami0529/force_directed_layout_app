@@ -1,5 +1,5 @@
 import { highlighters, g, shapes, dia, anchors, connectionPoints } from 'jointjs'
-import { createContainer } from './shapes/rect'
+import { createContainer, createLayoutBox } from './shapes/rect'
 import { blockToolView, expandedContainerToolsView, collapsedContainerToolsView } from './shapes/tools'
 import { normalLinkToolsView } from './shapes/linktool'
 import { createNormalLink, createBindingLink } from './shapes/link'
@@ -9,6 +9,7 @@ import { inspectActions } from '../store/slice/inspect'
 import { contextMenuActions } from '../store/slice/contextmenu'
 import { taglibActions } from '../store/slice/taglib';
 import { canvasActions } from '../store/slice/canvas';
+import { moveLayoutBox } from './layout'
 
 import { PAPERHIEGHT, PAPERWIDTH, POINTER_MOVE_THRESHLOLD } from './config'
 
@@ -176,26 +177,26 @@ export function initPaperEvents(paper, dispatch) {
 
     })
 
-    // paper.on('element:mouseenter', function(elementView) {
-    //     switch(elementView.model.role) {
-    //         case 'Block':
-    //             elementView.addTools(blockToolView)
-    //             break
-    //         // case 'expanded-container':
-    //         //     elementView.addTools(expandedContainerToolsView)
-    //         //     break
-    //         // case 'collapsed-container':
-    //         //     elementView.addTools(collapsedContainerToolsView)
-    //         //     break
-    //         default :
-    //             console.log("nothing happened")
-    //     }
-    //     elementView.showTools();
-    // });
+    paper.on('element:mouseenter', function(elementView) {
+        switch(elementView.model.role) {
+            case 'Block':
+                elementView.addTools(blockToolView)
+                break
+            // case 'expanded-container':
+            //     elementView.addTools(expandedContainerToolsView)
+            //     break
+            // case 'collapsed-container':
+            //     elementView.addTools(collapsedContainerToolsView)
+            //     break
+            default :
+                console.log("nothing happened")
+        }
+        elementView.showTools();
+    });
     
-    // paper.on('element:mouseleave', function(elementView) {
-    //     // elementView.hideTools();
-    // });
+    paper.on('element:mouseleave', function(elementView) {
+        elementView.hideTools();
+    });
 
     // for create container/group
     paper.on({
@@ -209,19 +210,20 @@ export function initPaperEvents(paper, dispatch) {
             const data = evt.data;
             const d = { x: x - data.x, y: y - data.y}
             if (Math.abs(d.x) < POINTER_MOVE_THRESHLOLD && Math.abs(d.y) < POINTER_MOVE_THRESHLOLD) return
-            if (!data.container) {
-                const { container } = createContainer(paper)
-                container.position(x, y);
-                container.toBack()
+            if (!data.layoutBox) {
+                const { layoutBoxBlock: layoutBox } = createLayoutBox(paper)
+                layoutBox.position(x, y);
+                layoutBox.toBack()
                 data.x = x;
                 data.y = y;
-                container.addTo(this.model);
-                data.container = container;
+                layoutBox.addTo(this.model);
+                layoutBox.on('change:position',moveLayoutBox)
+                data.layoutBox = layoutBox;
             } else { // a container has created
-                var container = data.container;
+                var layoutBox = data.layoutBox;
                 var bbox = new g.Rect(data.x, data.y, d.x, d.y);
                 bbox.normalize();
-                container.set({
+                layoutBox.set({
                     position: { x: bbox.x, y: bbox.y },
                     size: { width: Math.max(bbox.width, 1), height: Math.max(bbox.height, 1) }
                     }); // a bug here
@@ -230,39 +232,28 @@ export function initPaperEvents(paper, dispatch) {
 
         },
         'blank:pointerup': function(evt) {
-            if (!evt.data.container) return
-            var container = evt.data.container
-            const containerId = container.id
-            const seletedBlocks = this.findViewsInArea(container.getBBox())
+            if (!evt.data.layoutBox) return
+            var layoutBox = evt.data.layoutBox
 
             dispatch(
-                canvasActions.applyLocalLayout({ section: container })
+                canvasActions.applyLocalLayout({ section: layoutBox })
             )
 
-            // container functinalities, ignore for now
-            if (seletedBlocks.length > 1) {
-                for (const b of seletedBlocks) {
-                    if (b.model.id === containerId) continue
-                    // container.embed(b.model)
-                    // container.fitEmbeds({deep: true, padding: 10})
-                }
-            }
         },
     })
 
     // WIP
-    paper.on('slot:click', (e) => {
-        console.log('slot focus')
-    })
+    // paper.on('slot:click', (e) => {
+    //     console.log('slot focus')
+    // })
 
-    paper.on('bus', function(cellView, evt) {
-        console.log('here')
+    // paper.on('bus', function(cellView, evt) {
+    //     console.log('here')
 
-    })
+    // })
 
     paper.on('link:mouseenter', (linkView) => {
         if (!linkView.model.attributes.type === 'sectionDivider') {
-            console.log(linkView)
             linkView.addTools(normalLinkToolsView)
         }
     })
@@ -282,15 +273,12 @@ export function initPaperEvents(paper, dispatch) {
                 anchor: {
                     name: "left",
                     args: {
-                        offset: {
-                            x: "5%"
-                        }
+                        dx: "5%"
                     }
                 }
                 
             })
 
-            console.log(linkView)
         }
     })
 

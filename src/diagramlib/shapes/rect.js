@@ -46,6 +46,21 @@ const containerAttrs = {
     }
 }
 
+const layoutBox = {
+    attrs: {
+        body: {
+            class: 'layout-box',
+            strokeDasharray: "10 5",
+            opacity: "100%",
+            fillOpacity: 0,
+        },
+        label: {
+            label: "layout-box",
+            fill: "black",
+        }
+    }
+}
+
 const BusAttrs = {
     body: {
         fill: '#9A7B4F', // be defined in css
@@ -77,6 +92,18 @@ export function createContainer(paper, graph) {
     elementView.showTools()
 
     return { container, elementView }
+}
+
+export function createLayoutBox(paper, graph) {
+    var layoutBoxBlock = new shapes.standard.Rectangle(layoutBox)
+    layoutBoxBlock.role = "layout-box"
+    layoutBoxBlock.addTo(paper.model)
+    var elementView = layoutBoxBlock.findView(paper);
+    layoutBoxBlock.attr("label/text", elementView.id)
+
+    elementView.showTools()
+
+    return { layoutBoxBlock, elementView }
 }
 
 export function createBlock() {

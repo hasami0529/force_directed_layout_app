@@ -1,3 +1,5 @@
+import { PAPERHIEGHT, PAPERWIDTH } from "./config"
+
 export class Node {
 
     constructor(model, y) {
@@ -81,6 +83,35 @@ export class Line {
         const { x, y } = xy
         this.x = x
         this.y = y
+        this.model = null
+    }
+
+    setX(x){
+        if(this.model) {
+            this.model.source({ x: x, y: 0})
+            this.model.target({ x: x, y: PAPERHIEGHT})
+        }
+
+    }
+
+    setY(y) {
+        if (this.model) {
+            this.model.source({ x: 0, y: y})
+            this.model.target({ x: PAPERWIDTH, y: y})
+        }
+
+    }
+
+    translate(dxy) {
+        if (this.model) {
+            if (dxy.dx) {
+                this.model.source({ x: this.x + dxy.dx, y: 0})
+                this.model.target({ x: this.x + dxy.dx, y: PAPERHIEGHT})
+                this.x = this.x + dxy.dx
+            }
+        }
+
+
     }
 
     getProjectionPoint(node) {

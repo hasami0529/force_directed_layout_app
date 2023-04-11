@@ -3,9 +3,9 @@ import { shapes, g } from 'jointjs'
 import { Vector } from 'matter-js'
 import { Line, Node, Section } from './geometry'
 
-export function localLayout(graph, selectedBlocks, section) {
+export function localLayout(graph, selectedBlocks, layoutBox) {
 
-    const bbox = section.getBBox()
+    const bbox = layoutBox.getBBox()
     let blocks = selectedBlocks.map((b) => new Node(b))
     const s = new Section(bbox.x , bbox.y, bbox.width, bbox.height)
     let mode, alignmentLine;
@@ -23,7 +23,13 @@ export function localLayout(graph, selectedBlocks, section) {
 
     // decide alignment line
     nodes.push(alignmentLine)
+
     drawAlignmentLine(graph, alignmentLine)
+    layoutBox.layoutMap = {
+        line: alignmentLine,
+        focusNodes: blocks,
+        mix: [alignmentLine, ...blocks]
+    }
 
     console.log(s.center)
     // blocks[0].anchor(s.center)
@@ -72,10 +78,11 @@ function drawAlignmentLine(graph, line) {
     }
 
     aline.addTo(graph)
+    line.model = aline
 }
 
 
-function directedForce(nodes, section, params) {
+function directedForce(nodes, _, params) {
 
     // i - interations
     // k - Coulomb's law constant
@@ -148,4 +155,38 @@ function directedForce(nodes, section, params) {
         });
     }
 
+}
+
+export function moveLayoutBox(e, newPosition) {
+    if (e.layoutMap.line) {
+        const aline = e.layoutMap.line
+        if (aline.x) {
+            console.log('x', aline.x)
+
+            console.log(e.getBBox().center().x)
+
+            aline.setX(e.getBBox().center().x)
+
+            let i = 1000
+    
+            setInterval(() => {
+                i--
+                // console.log(i)
+                if (i <= 0) return
+                directedForce(e.layoutMap.mix, undefined, {
+                    i: 1,
+                    k: 0.002,
+                    h: 0.01,
+                    l: 100,
+                    p: 0,
+                    c: 0, // ignore the Coulomb's law
+                    s: 0.05 // over this tranlation volume will be ignored
+                })
+            }, 5);
+
+        } else {
+            console.log('y', aline.y)
+            aline.setY(e.getBBox().center().y)
+        }
+    }
 }
