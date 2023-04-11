@@ -90,6 +90,7 @@ export class Line {
         if(this.model) {
             this.model.source({ x: x, y: 0})
             this.model.target({ x: x, y: PAPERHIEGHT})
+            this.x = x
         }
 
     }
@@ -98,6 +99,7 @@ export class Line {
         if (this.model) {
             this.model.source({ x: 0, y: y})
             this.model.target({ x: PAPERWIDTH, y: y})
+            this.y = y
         }
 
     }
@@ -122,9 +124,6 @@ export class Line {
         }
     }
 
-    // static genLines(section) {
-    //     return [new Line({ x: section.origin.x}), new Line({ y: section.origin.y })]
-    // }
 }
 
 export class Section {
