@@ -106,31 +106,16 @@ export function createLayoutBox(paper, graph) {
     return { layoutBoxBlock, elementView }
 }
 
-export function createBlock() {
+export function createBlock(position, label) {
+
+    attrs.label = {
+        text: label
+    }
 
     var rect = new shapes.standard.Rectangle(attrs);
     rect.attr(attrs)
-    // rect.markup = [{
-    //         tagName: "rect",
-    //         selector: "body",
-    //         style: {
-    //             "fill": '#2BF0FB', // be defined in css
-    //             "class": 'block'
-    //         }
-    //     },
-    //     {
-    //         tagName: "text",
-    //         selector: "label",
-    //         attributes: {
-    //             "label": 'block',
-    //             "fill": 'black'
-    //         }
-    //     }
-    // ]
-    rect.role = 'Block'
-    rect.position(100, 30);
-    rect.resize(100, 70);
-    // rect.addTo(graph) // shouldn't be here
+    rect.position(position.x, position.y);
+    rect.resize(80, 55);
 
     return { rect }
 }
@@ -145,7 +130,6 @@ export function createBus(paper, graph) {
     rect.addTo(graph)
 
     var elementView = rect.findView(paper);
-    // elementView.addTools(blockToolView);
     elementView.hideTools()
     return { rect, elementView }
 }
