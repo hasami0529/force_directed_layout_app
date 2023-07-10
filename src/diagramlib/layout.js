@@ -6,7 +6,6 @@ let i = 1000
 
 export function localLayout(graph) {
 
-    console.log('highlight')
     const blocks = graph.getElements().map((b) => new Node(b))
   
     setInterval(() => {
@@ -15,7 +14,7 @@ export function localLayout(graph) {
         if (i <= 0) return
         directedForce(blocks, {
             i: 1,
-            k: 0.002,
+            k: 0.000002,
             h: 0.01,
             l: 200,
             p: 0,
@@ -48,7 +47,7 @@ function directedForce(nodes, params) {
         return Math.sqrt((Math.pow(n.originalCoor.x - m.originalCoor.x, 2) + Math.pow(n.originalCoor.y - m.originalCoor.y, 2)))
     }
 
-    function attr(n, m, springLength) {
+    function attr(n, m) {
         // attractive force by Hooke's law
         let force = h * (distance(n,m) - originalDistance(n,m))
         let directionVector = direction(n, m)
@@ -69,12 +68,23 @@ function directedForce(nodes, params) {
         let vec_ang = []
 
         for (let i=0; i < neighbors.length; i++) {
-            const vector = Vector.create(n.center.x - neighbors[i].center.x , n.center.y - neighbors[i].center.y)
+            const vector = Vector.create( neighbors[i].center.x - n.center.x, neighbors[i].center.y - n.center.y )
             let angle;
             if (i === 0) {
                 angle = 0
             } else {
-                angle = Vector.angle(vec_ang[0].vector, vector)
+                // console.log(Vector.angle(Vector.create(-130,0), Vector.create(130,0)))
+
+                var dotProduct = vec_ang[0].vector.x * vector.x + vec_ang[0].vector.y * vector.y;
+
+                // Calculate the magnitudes of the vectors
+                var magnitude1 = Math.sqrt(vec_ang[0].vector.x * vec_ang[0].vector.x + vec_ang[0].vector.y * vec_ang[0].vector.y);
+                var magnitude2 = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+
+                // Calculate the cosine of the angle
+                var cosine = dotProduct / (magnitude1 * magnitude2);
+                angle = Math.acos(cosine);
+                // angle = Vector.angle(vec_ang[0].vector, vector)
                 if(angle < 0) angle = 2*Math.PI + angle
             }
 
@@ -107,8 +117,8 @@ function directedForce(nodes, params) {
             }
         }
 
-        const s = 1 // constant for the bending force
-        const m = 2*Math.PI - (Math.PI/1.5) //  minimum angle
+        const s = 0.5 // constant for the bending force
+        const m = 2*Math.PI - (Math.PI/2) //  minimum angle
 
         // rotate
         console.log("the_two_forming_nodes", the_two_forming_nodes)
@@ -119,9 +129,9 @@ function directedForce(nodes, params) {
             f1 = Vector.mult(Vector.normalise(f1), s)
             // console.log(f1)
 
-            // f2 = Vector.perp(the_two_forming_nodes[0], true)
-            // f2 = Vector.mult(Vector.normalise(f2), s)
-            return f1
+            f2 = Vector.perp(the_two_forming_nodes[1], true)
+            f2 = Vector.mult(Vector.normalise(f2), s)
+            return Vector.add(f1, f2)
         }
 
 
@@ -141,19 +151,16 @@ function directedForce(nodes, params) {
                 for (let m of nodes) {
                     if (n === m) continue
                    
+                    // attr
                     if (n.isNeighbor(m)) {
                         neighbors.push(m)
-                        
-                        if (n.isAnchor) {
-                            m = n.anchorNode
-                            f = Vector.add(f, attr(n, m, 0))
-                        } 
-                        else {
-                            f = Vector.add(f, attr(n, m, l))
-                        }
-                        // const r = Vector.mult(Vector.add(f, rep(n, m)), Math.pow(c, i))
-                        // f = Vector.add(f, r)
+                        f = Vector.add(f, attr(n, m))
                     }
+
+                    // rep
+                    f = Vector.add(f, rep(n, m))
+                    
+
                     }
 
                     if(n.expandable) {
