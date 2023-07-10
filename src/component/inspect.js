@@ -80,7 +80,11 @@ function Layout() {
 
   return (
     <Box sx={{ width: 250 }}>
-      <Button variant="outlined" onClick={() => {dispatch(canvasActions.setLayoutMap())}}>Apply</Button>
+      <Button variant="outlined" onClick={() => {dispatch(canvasActions.blueBox())}}>blueBox Demo</Button>
+      <Button variant="outlined" onClick={() => {dispatch(canvasActions.basicOperation())}}>Basic Operation Demo</Button>
+      {/* <Button variant="outlined" onClick={() => {dispatch(canvasActions.add())}}>Add Test Block</Button> */}
+      <Button variant="outlined" onClick={() => {dispatch(canvasActions.applyLocalLayout())}}>Start Layout</Button>
+
     </Box>
   )
 }
@@ -113,18 +117,6 @@ function InfoTable(){
 export function Inspect() {
   return(
     <div class='inspection'>
-      <Accordion defaultExpanded="true">
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography>General</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <InfoTable></InfoTable>
-        </AccordionDetails>
-      </Accordion>
 
       <Accordion defaultExpanded="true">
         <AccordionSummary
@@ -138,6 +130,20 @@ export function Inspect() {
           <Layout></Layout>
         </AccordionDetails>
       </Accordion>
+
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography>General</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <InfoTable></InfoTable>
+        </AccordionDetails>
+      </Accordion>
+
 
       <Accordion>
         <AccordionSummary

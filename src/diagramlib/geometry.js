@@ -1,15 +1,25 @@
 import { PAPERHIEGHT, PAPERWIDTH } from "./config"
+import { setLabel } from "./factory"
 
 export class Node {
 
-    constructor(model, y) {
-        if (y === undefined) {
-            this.model = model
-            this.bbox = model.getBBox()
-        } else {
-            this.bbox = { x: model, y: y } // model parameter is used as x 
+    constructor(model) {
+        this.model = model
+        const { x, y, height, width } = model.getBBox()
+        this.bbox = {
+            x, y, height, width
         }
+
+        this.originalCoor = {
+            x,y
+        }
+
         this.anchorNode = undefined
+
+        // transform into a size-wighted graph
+        this.model.size(50, 50)
+        setLabel(this.model, this.area.toString())
+        
     }
 
     get x() {
@@ -21,11 +31,12 @@ export class Node {
     }
 
     get center() {
-        if (this.model) {
-            return this.bbox.center()
-        } else {
-            return this.bbox
-        }
+        const cx = this.bbox.x + this.bbox.width/2
+        const cy = this.bbox.y + this.bbox.height/2
+
+
+        return { x: cx, y: cy }
+
     }
 
     get area() {
@@ -40,7 +51,9 @@ export class Node {
 
     move() {
         this.model.translate(this.dx, this.dy)
-        this.bbox = this.model.getBBox()
+        const { x, y } = this.model.getBBox()
+        this.bbox.x = x
+        this.bbox.y = y
     }
 
     anchor(node) {
@@ -75,118 +88,8 @@ export class Node {
         }
     }
 
-}
-
-export class Line {
-
-    constructor(xy) {
-        const { x, y } = xy
-        this.x = x
-        this.y = y
-        this.model = null
+    recover() {
+        this.model.resize(this.bbox, this.bbox.height, this.bbox.width)
     }
 
-    setX(x){
-        if(this.model) {
-            this.model.source({ x: x, y: 0})
-            this.model.target({ x: x, y: PAPERHIEGHT})
-            this.x = x
-        }
-
-    }
-
-    setY(y) {
-        if (this.model) {
-            this.model.source({ x: 0, y: y})
-            this.model.target({ x: PAPERWIDTH, y: y})
-            this.y = y
-        }
-
-    }
-
-    translate(dxy) {
-        if (this.model) {
-            if (dxy.dx) {
-                this.model.source({ x: this.x + dxy.dx, y: 0})
-                this.model.target({ x: this.x + dxy.dx, y: PAPERHIEGHT})
-                this.x = this.x + dxy.dx
-            }
-        }
-
-
-    }
-
-    getProjectionPoint(node) {
-        if (this.x) {
-            return new Node(this.x, node.center.y)
-        } else {
-            return new Node(node.center.x, this.y)
-        }
-    }
-
-}
-
-export class Section {
-    constructor(x, y, width, height) {
-        this.origin = {
-            x: x,
-            y: y,
-        }
-        this.width = width
-        this.height = height
-    }
-
-    get bottomRight() {
-        return { x: this.topLeft.x + this.width, y: this.topLeft.y + this.height}
-    }
-
-    get topLeft() {
-        return this.origin
-    }
-
-    // get bottomLeft() {
-    // }
-
-    // get topRight() {
-    // }
-
-    get center() {
-        return {
-            x: this.origin.x + this.width/2,
-            y: this.origin.y + this.height/2
-        }
-    }
-
-    get horizontalCentralLine() {
-        return new Line({y: this.center.y})
-    }
-
-    get verticalCentralLine() {
-        return new Line({x: this.center.x})
-    }
-
-    In(node) {
-        if (node instanceof Node) {
-            const { x, y } = node.center
-            if (x >= this.topLeft.x && x <= this.bottomRight.x
-                    && y >= this.topLeft.y && y <= this.bottomRight.y) {
-                        return true
-                    }
-        } else {
-            const { x, y } = node // { x,y } format
-            if (x >= this.topLeft.x && x <= this.bottomRight.x
-                && y >= this.topLeft.y && y <= this.bottomRight.y) {
-                    return true
-                }
-        }
-
-        return false
-    }
-}
-
-class Spring {
-    constructor(k, length) {
-        this.k = k
-        this.length = length
-    }
 }

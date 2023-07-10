@@ -12,6 +12,7 @@ import { canvasActions } from '../store/slice/canvas';
 import { moveLayoutBox } from './layout'
 
 import { PAPERHIEGHT, PAPERWIDTH, POINTER_MOVE_THRESHLOLD } from './config'
+import { setLabel } from './factory'
 
 export function init() {
     var namespace = shapes;
@@ -44,49 +45,6 @@ export function init() {
         },
         defaultLink: createNormalLink,
         defaultConnectionPoint: connectionPoints.boundary,
-        // validateConnection: (cellViewS, magnetS, cellViewT, magnetT, end, linkView) => {
-        //     if (magnetS.getAttribute('role') === 'Port' && magnetT?.getAttribute('role') === 'Port') return true
-        //     if ((magnetS.getAttribute('role') === 'Slot' && magnetT?.getAttribute('role') === 'Port') |
-        //     (magnetS.getAttribute('role') === 'Port' && magnetT?.getAttribute('role') === 'Slot')) {
-        //         const l = createBindingLink()
-        //         l.source(cellViewS.model, {
-        //             port: magnetS.getAttribute('port')
-        //         })
-        //         l.target(cellViewT.model, {
-        //             port: magnetT.getAttribute('port')
-        //         })
-        //         l.addTo(cellViewS.model.graph)
-        //         linkView.remove()
-        //         return true
-        //     }
-        // },
-        // defaultAnchor: (view, magnet, _, args) => {
-        //     const group = view.findAttribute("port-group", magnet);
-        //     return customAnchor(group, view, magnet, _, args)
-        // },
-        // defaultLinkAnchor: (view, magnet, ...rest) => {
-        //     const group = view.findAttribute("port-group", magnet);
-        //     let anchorFn;
-        //     console.log(group)
-        //     switch (group) {
-        //         case 'left':
-        //             anchorFn = anchors.left
-        //             break;
-        //         case 'right':
-        //             anchorFn = anchors.right
-        //             break;
-        //         case 'top':
-        //             anchorFn = anchors.top
-        //             break;
-        //         case 'bottom':
-        //             anchorFn = anchors.bottom
-        //             break;
-        //         default:
-        //             break;
-        //     }
-        //     // const anchorFn = group === "in" ? anchors.left : anchors.right;
-        //     return anchorFn(view, magnet, ...rest);
-        // },
         interactive: (cellView, method) => {
             if (cellView.model.attributes.type === 'alignmentLine') return false
             return true
@@ -118,6 +76,7 @@ export function initPaperEvents(paper, dispatch) {
     })
 
     paper.on('element:pointerclick', (elementView) => {
+        console.log(elementView.model.getBBox())
         switch (elementView.model.role) {
             case 'Block':
                 if (!highlighters.mask.get(elementView).length) {
@@ -154,6 +113,12 @@ export function initPaperEvents(paper, dispatch) {
             default:
                 break;
         }
+
+        paper.on('element:pointerup', (elementView) => {
+            elementView.model.toFront()
+            const s = `${elementView.model.position().x},${elementView.model.position().y}`
+            setLabel(elementView.model, s)
+        })
 
 
     })
