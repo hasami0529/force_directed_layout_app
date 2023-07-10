@@ -39,6 +39,10 @@ export class Node {
 
     }
 
+    get expandable() {
+        return this.model.expandable
+    }
+
     get area() {
         return this.bbox.height * this.bbox.width
     }

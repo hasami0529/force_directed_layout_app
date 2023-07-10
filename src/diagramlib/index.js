@@ -133,24 +133,26 @@ export function basicOperationDemo(graph, paper) {
         }
     })
 
-    const { rect: t, elementView: tv } = createBlock({x: 20, y:20}, 'test')
     const { rect: b1, elementView: v1 } = createBlock({x: 200, y:153}, 'block1')
-    const { rect: b2, elementView: v2 } = createBlock({x: 330, y:153}, 'block2')
+    const { rect: x, elementView: vx } = createBlock({x: 330, y:153}, 'expandable')
+    x.expandable = true
+    const { rect: b2, elementView: v2 } = createBlock({x: 460, y:153}, 'block2')
 
     // link length = 50
     const l = createNormalLink()
     l.source(b1)
-    l.target(b2)
+    l.target(x)
 
-    // strech to 1.4 * link length = 70
+    const l2 = createNormalLink()
+    l2.source(x)
+    l2.target(b2)
 
 
-
-
-    t.addTo(graph)
     b1.addTo(graph)
     b2.addTo(graph)
+    x.addTo(graph)
     l.addTo(graph)
+    l2.addTo(graph)
 
 }
 

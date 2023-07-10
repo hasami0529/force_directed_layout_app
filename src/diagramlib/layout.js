@@ -63,6 +63,72 @@ function directedForce(nodes, params) {
         let directionVector = direction(m, n)
         return Vector.mult(Vector.normalise(directionVector), force)
     }
+
+    function rotate(n, neighbors) {
+        // find the largest angle
+        let vec_ang = []
+
+        for (let i=0; i < neighbors.length; i++) {
+            const vector = Vector.create(n.center.x - neighbors[i].center.x , n.center.y - neighbors[i].center.y)
+            let angle;
+            if (i === 0) {
+                angle = 0
+            } else {
+                angle = Vector.angle(vec_ang[0].vector, vector)
+                if(angle < 0) angle = 2*Math.PI + angle
+            }
+
+            vec_ang[i] = {
+                node: neighbors[i],
+                vector,
+                angle
+            }
+        }
+
+        vec_ang.sort((a, b) => a.angle - b.angle)
+        console.log("vec_ang", vec_ang)
+
+        let max_dff_angel = 0;
+        let the_two_forming_nodes= [];
+        for (let i=0; i < vec_ang.length; i++) {
+            const j = (i+1) % vec_ang.length
+
+
+            function diff_angle(angle1, angle2) {
+                if (j > i) return angle1 - angle2
+                else return 2*Math.PI + (angle1 - angle2)
+            }
+            console.log(diff_angle(vec_ang[j].angle, vec_ang[i].angle))
+
+            if (diff_angle(vec_ang[j].angle, vec_ang[i].angle) > max_dff_angel) {
+
+                max_dff_angel = diff_angle(vec_ang[j].angle, vec_ang[i].angle)
+                the_two_forming_nodes = [vec_ang[i].vector, vec_ang[j].vector]
+            }
+        }
+
+        const s = 1 // constant for the bending force
+        const m = 2*Math.PI - (Math.PI/1.5) //  minimum angle
+
+        // rotate
+        console.log("the_two_forming_nodes", the_two_forming_nodes)
+        console.log(max_dff_angel, m)
+        let f1, f2;
+        if (max_dff_angel < m) {
+            f1 = Vector.perp(the_two_forming_nodes[0])
+            f1 = Vector.mult(Vector.normalise(f1), s)
+            // console.log(f1)
+
+            // f2 = Vector.perp(the_two_forming_nodes[0], true)
+            // f2 = Vector.mult(Vector.normalise(f2), s)
+            return f1
+        }
+
+
+        console.log('hi')
+
+        return Vector.create(0, 0)
+    }
     
     // repeat
     for (let iter=0; iter < i; iter++) {
@@ -70,22 +136,30 @@ function directedForce(nodes, params) {
             let f = Vector.create(0,0)
     
             if (n instanceof Node) {
+                let neighbors = []
 
                 for (let m of nodes) {
                     if (n === m) continue
                    
                     if (n.isNeighbor(m)) {
+                        neighbors.push(m)
+                        
                         if (n.isAnchor) {
                             m = n.anchorNode
                             f = Vector.add(f, attr(n, m, 0))
-                        } else {
+                        } 
+                        else {
                             f = Vector.add(f, attr(n, m, l))
                         }
-                        
                         // const r = Vector.mult(Vector.add(f, rep(n, m)), Math.pow(c, i))
                         // f = Vector.add(f, r)
                     }
-                }
+                    }
+
+                    if(n.expandable) {
+                        f= Vector.add(f, rotate(n, neighbors))
+                    }
+                
                 // console.log(n.model.id)
                 // console.log('force', f)
                 n.translate(f.x, f.y)
