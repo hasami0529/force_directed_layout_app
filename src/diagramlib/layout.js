@@ -1,5 +1,5 @@
 import { Vector } from 'matter-js'
-import { Line, Node, Section } from './geometry'
+import {  Node } from './geometry'
 
 // adding i to a positive number the layout algo will continue else stop at i = 0
 let i = 1000
@@ -17,9 +17,9 @@ export function localLayout(graph) {
             k: 0.000002,
             h: 0.01,
             l: 200,
-            p: 0,
             c: 0, // ignore the Coulomb's law
-            s: 0.05 // over this tranlation volume will be ignored
+            s: 0.05, // over this tranlation volume will be ignored
+            r: 1, // radial force
         })
     }, 5);
 
@@ -32,8 +32,7 @@ function directedForce(nodes, params) {
     // k - Coulomb's law constant
     // h - Hooke's law constant
     // l - edge spring length
-    // p - padding spring length
-    const { i, k, h, l, p, c, s } = params
+    const { i, k, h, l, p, c, s, r } = params
 
     function distance(n, m) {
         return Math.sqrt((Math.pow(n.center.x - m.center.x, 2) + Math.pow(n.center.y - m.center.y, 2)))
@@ -63,7 +62,7 @@ function directedForce(nodes, params) {
         return Vector.mult(Vector.normalise(directionVector), force)
     }
 
-    function rotate(n, neighbors) {
+    function bendingForce(n, neighbors) {
         // find the largest angle
         let vec_ang = []
 
@@ -135,9 +134,30 @@ function directedForce(nodes, params) {
         }
 
 
-        console.log('hi')
-
         return Vector.create(0, 0)
+    }
+
+    function RadialForce(expandable) {
+        // compute the midpoint of all the nodes
+        let m = {x: 0, y: 0}
+        for (let n of nodes) {
+            if (n instanceof Node) {
+                m.x += n.center.x
+                m.y += n.center.y
+            }
+        }
+
+        m.x /= nodes.length
+        m.y /= nodes.length
+
+        console.log(m)
+
+        //direction
+        if  (!(expandable instanceof Node)) return
+
+        let f = Vector.create(expandable.center.x - m.x, expandable.center.y - m.y)
+        f = Vector.mult(Vector.normalise(f), r)
+        return f
     }
     
     // repeat
@@ -164,7 +184,8 @@ function directedForce(nodes, params) {
                     }
 
                     if(n.expandable) {
-                        f= Vector.add(f, rotate(n, neighbors))
+                        // f= Vector.add(f, bendingForce(n, neighbors))
+                        f= Vector.add(f, RadialForce(n))
                     }
                 
                 // console.log(n.model.id)

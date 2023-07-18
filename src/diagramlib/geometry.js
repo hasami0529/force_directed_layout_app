@@ -1,4 +1,3 @@
-import { PAPERHIEGHT, PAPERWIDTH } from "./config"
 import { setLabel } from "./factory"
 
 export class Node {
@@ -17,7 +16,7 @@ export class Node {
         this.anchorNode = undefined
 
         // transform into a size-wighted graph
-        this.model.size(50, 50)
+        // this.model.size(50, 50)
         setLabel(this.model, this.area.toString())
         
     }
