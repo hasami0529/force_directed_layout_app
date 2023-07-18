@@ -1,6 +1,5 @@
 import { createNormalLink } from './shapes/link'
 import { createBlock } from './shapes/rect'
-import { Vector } from 'matter-js'
 import { getLabel } from '../utils'
 
 export { addBlock, setLabel, addPort, addSlot } from './factory'
@@ -9,71 +8,75 @@ export { init, initPaperEvents } from './init'
 
 export function blueBox(graph, paper) {
 
-    const { rect: DSP } = createBlock({x: 372, y:195}, 'DSP')
+    const { rect: DSP } = createBlock({x: 523, y:300}, 'DSP')
     DSP.size(160,110)
 
-    const { rect: Temp } = createBlock({x: 230, y:195}, 'Temp')
-    const { rect: Env_Mic } = createBlock({x: 630, y:171}, 'Env. Mic')
-    const { rect: Contact_Mic } = createBlock({x: 630, y:273}, 'Contact Mic')
-    const { rect: BLE } = createBlock({x: 413, y:92}, 'BLE')
+    const { rect: Body_Temp } = createBlock({x: 300, y:227}, 'body temp.')
+    const { rect: Env_Temp } = createBlock({x: 300, y:327}, 'env. temp.')
+    const { rect: Env_Mic } = createBlock({x: 887, y:245}, 'Env. Mic')
+    const { rect: Contact_Mic } = createBlock({x: 887, y:345}, 'Contact Mic')
+    const { rect: BLE } = createBlock({x: 566, y:97}, 'BLE')
 
-    const { rect: Flash } = createBlock({x: 230, y:321}, 'Flash')
-    const { rect: Micro_SD } = createBlock({x: 230, y:422}, 'Micro SD')
-    const { rect: Eletorde } = createBlock({x: 630, y:393}, 'Eletorde')
+    const { rect: Flash } = createBlock({x: 392, y:460}, 'Flash')
+    const { rect: Micro_SD } = createBlock({x: 515, y:460}, 'Micro SD')
+    const { rect: Electorde } = createBlock({x: 887, y:413}, 'Electorde')
+    const { rect: Decoder } = createBlock({x: 739, y:296}, 'Decoder')
+
+
+    // expandable
+    const { rect: link1 } = createBlock({x: 739, y:413}, 'Link1')
+    const { rect: link2 } = createBlock({x: 566, y:191}, 'Link2')
 
     DSP.addTo(graph)
-    Temp.addTo(graph)
+    Env_Temp.addTo(graph)
+    Body_Temp.addTo(graph)
     Env_Mic.addTo(graph)
     BLE.addTo(graph)
     Contact_Mic.addTo(graph)
     Flash.addTo(graph)
-    Eletorde.addTo(graph)
+    Electorde.addTo(graph)
     Micro_SD.addTo(graph)
-
-    const l1 = createNormalLink()
-    const l2 = createNormalLink()
-    const l3 = createNormalLink()
-    const l4 = createNormalLink()
-    const l5 = createNormalLink()
-    const l6 = createNormalLink()
-    const l7 = createNormalLink()
-
-    l1.target(Temp)
-    l1.source(DSP)
+    Decoder.addTo(graph)
 
 
 
-    l2.target(Flash)
-    l2.source(DSP)
+    //
+    link2.expandable = true
+    link1.expandable = true
+    link1.addTo(graph)
+    link2.addTo(graph)
 
-    l3.target(Micro_SD)
-    l3.source(DSP)
 
-    l4.target(BLE)
-    l4.source(DSP)
+    function connect(b1, b2) {
+        const l1 = createNormalLink()
+        l1.target(b1)
+        l1.source(b2)
+        l1.addTo(graph)
+    }
 
-    l5.target(Env_Mic)
-    l5.source(DSP)
+    // const l7 = createNormalLink()
+    // const l7 = createNormalLink()
+    // const l7 = createNormalLink()
+    // const l7 = createNormalLink()
 
-    l6.target(Contact_Mic)
-    l6.source(DSP)
 
-    l7.target(Eletorde)
-    l7.source(DSP)
+    connect(Body_Temp, DSP)
+    connect(Env_Temp, DSP)
+    connect(Flash, DSP)
+    connect(Micro_SD, DSP)
+    connect(Env_Mic, Decoder)
+    connect(Contact_Mic, Decoder)
+    connect(Decoder, DSP)
 
-    // l3.insertVertex(0, {
-    //     x: 452, y: 397
-    // })
 
-        
+    connect(Electorde, link1)
+    connect(link1, DSP)
 
-    l1.addTo(graph)
-    l2.addTo(graph)
-    l3.addTo(graph)
-    l4.addTo(graph)
-    l5.addTo(graph)
-    l6.addTo(graph)
-    l7.addTo(graph)
+    connect(BLE, link2)
+    connect(link2, DSP)
+
+    // block style link
+    link1.addTo(graph)
 
 }
 

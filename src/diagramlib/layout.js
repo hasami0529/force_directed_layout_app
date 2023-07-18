@@ -2,7 +2,7 @@ import { Vector } from 'matter-js'
 import {  Node } from './geometry'
 
 // adding i to a positive number the layout algo will continue else stop at i = 0
-let i = 1000
+let i = 1300
 
 export function localLayout(graph) {
 
@@ -14,17 +14,32 @@ export function localLayout(graph) {
         if (i <= 0) return
         directedForce(blocks, {
             i: 1,
-            k: 0.000002,
-            h: 0.01,
-            l: 200,
-            c: 0, // ignore the Coulomb's law
+            k: 0.5,
+            h: 0.05,
             s: 0.05, // over this tranlation volume will be ignored
-            r: 1, // radial force
+            r: 200, // radial force
+            p: 30, // global padding
         })
     }, 5);
 
     // blocks.map((b) => b.recover())
 }
+
+// export function localLayout(graph) {
+
+//     const blocks = graph.getElements().map((b) => new Node(b))
+  
+
+//         directedForce(blocks, {
+//             i: 10,
+//             k: 0.000002,
+//             h: 0.01,
+//             l: 200,
+//             c: 0, // ignore the Coulomb's law
+//             s: 0.05, // over this tranlation volume will be ignored
+//             r: 1, // radial force
+//         })
+// }
 
 function directedForce(nodes, params) {
 
@@ -32,7 +47,7 @@ function directedForce(nodes, params) {
     // k - Coulomb's law constant
     // h - Hooke's law constant
     // l - edge spring length
-    const { i, k, h, l, p, c, s, r } = params
+    const { i, k, h, r, s, p } = params
 
     function distance(n, m) {
         return Math.sqrt((Math.pow(n.center.x - m.center.x, 2) + Math.pow(n.center.y - m.center.y, 2)))
@@ -46,9 +61,13 @@ function directedForce(nodes, params) {
         return Math.sqrt((Math.pow(n.originalCoor.x - m.originalCoor.x, 2) + Math.pow(n.originalCoor.y - m.originalCoor.y, 2)))
     }
 
+    function coorDistance(n,m) {
+        return Math.sqrt((Math.pow(n.x - m.x, 2) + Math.pow(n.y - m.y, 2)))
+    }
+
     function attr(n, m) {
         // attractive force by Hooke's law
-        let force = h * (distance(n,m) - originalDistance(n,m))
+        let force = h * (coorDistance(n,m) - originalDistance(n,m))
         let directionVector = direction(n, m)
 
         return Vector.mult(Vector.normalise(directionVector), force)
@@ -57,9 +76,25 @@ function directedForce(nodes, params) {
 
     function rep(n, m) {
         // repulsive force applied by Coulomb's law
-        let force = k * n.area * m.area / distance(m, n)
-        let directionVector = direction(m, n)
-        return Vector.mult(Vector.normalise(directionVector), force)
+        // let force = k * n.weight * m.weight / distance(m, n)
+
+        let rep_x = 0
+        let rep_y = 0
+        let force
+        // x-axis
+        rep_x = (coorDistance(n,m) - (n.x_padding + m.x_padding+p))
+        rep_y = (coorDistance(n,m) - (n.y_padding + m.y_padding+p))
+
+        console.log(rep_x, rep_y)
+
+        if (rep_x < 0 && rep_y < 0) {
+            force = h *Math.sqrt(Math.pow(rep_x, 2)+Math.pow(rep_y, 2))
+            let directionVector = direction(m, n)
+            return Vector.mult(Vector.normalise(directionVector), force)
+        }
+        
+        return Vector.create(0, 0)
+
     }
 
     function bendingForce(n, neighbors) {
@@ -117,7 +152,7 @@ function directedForce(nodes, params) {
         }
 
         const s = 0.5 // constant for the bending force
-        const m = 2*Math.PI - (Math.PI/2) //  minimum angle
+        const m = 2*Math.PI - (Math.PI/3) //  minimum angle
 
         // rotate
         console.log("the_two_forming_nodes", the_two_forming_nodes)
@@ -156,7 +191,7 @@ function directedForce(nodes, params) {
         if  (!(expandable instanceof Node)) return
 
         let f = Vector.create(expandable.center.x - m.x, expandable.center.y - m.y)
-        f = Vector.mult(Vector.normalise(f), r)
+        f = Vector.mult(Vector.normalise(f), r * (1/Vector.magnitude(f)))
         return f
     }
     
@@ -170,27 +205,29 @@ function directedForce(nodes, params) {
 
                 for (let m of nodes) {
                     if (n === m) continue
-                   
                     // attr
                     if (n.isNeighbor(m)) {
                         neighbors.push(m)
                         f = Vector.add(f, attr(n, m))
                     }
-
                     // rep
                     f = Vector.add(f, rep(n, m))
-                    
-
                     }
-
                     if(n.expandable) {
-                        // f= Vector.add(f, bendingForce(n, neighbors))
+                        f= Vector.add(f, bendingForce(n, neighbors))
                         f= Vector.add(f, RadialForce(n))
+
+                        // weight update
+                        n.x_padding *= 1.001
+                        n.y_padding *= 1.001
                     }
                 
                 // console.log(n.model.id)
-                // console.log('force', f)
+                console.log('force', f)
+                f = Vector.mult(f , (1/(n.area/1000)))
+                // if (Vector.magnitude(f) >= s) n.translate(f.x, f.y)
                 n.translate(f.x, f.y)
+
             }
         }
         // render

@@ -10,14 +10,17 @@ export class Node {
         }
 
         this.originalCoor = {
-            x,y
+            x, y
         }
 
         this.anchorNode = undefined
 
         // transform into a size-wighted graph
         // this.model.size(50, 50)
-        setLabel(this.model, this.area.toString())
+        // setLabel(this.model, this.area.toString())
+
+        this.x_padding = this.bbox.width/2
+        this.y_padding = this.bbox.height/2
         
     }
 
@@ -32,8 +35,6 @@ export class Node {
     get center() {
         const cx = this.bbox.x + this.bbox.width/2
         const cy = this.bbox.y + this.bbox.height/2
-
-
         return { x: cx, y: cy }
 
     }
@@ -45,6 +46,11 @@ export class Node {
     get area() {
         return this.bbox.height * this.bbox.width
     }
+
+    get padding() {
+        return (this.bbox.height + this.bbox.width)/2
+    }
+
 
     translate(dx, dy) {
         // restore the momentum for move function
